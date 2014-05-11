@@ -11,11 +11,25 @@
 namespace NicMart\Rulez\Test\Condition;
 
 
+use NicMart\Rulez\Condition\Condition;
+use NicMart\Rulez\Maps\MapsCollection;
+
 class ConditionTest extends \PHPUnit_Framework_TestCase
 {
-    function testMoo()
+    function testResolveToCallback()
     {
-        return true;
+        $condition = new Condition("foo", "bar");
+        $collection = new MapsCollection;
+
+        $callback = $condition->resolveToCallback($collection);
+
+        $this->setExpectedException("\\OutOfBoundsException");
+        $callback("bar");
+
+        $collection["foo"] = function($x) { return $x; };
+
+        $this->assertTrue($callback("bar"));
+        $this->assertFalse($callback("baz"));
     }
 }
  
