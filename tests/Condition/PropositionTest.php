@@ -21,13 +21,13 @@ class PropositionTest extends \PHPUnit_Framework_TestCase
     {
         $proposition = new Proposition(1, 3);
 
-        $this->assertSame(1, $proposition->getAtLeast());
-        $this->assertSame(3, $proposition->getAtMost());
+        $this->assertSame(1, $proposition->atLeast());
+        $this->assertSame(3, $proposition->atMost());
 
         $proposition = new Proposition;
 
-        $this->assertSame(1, $proposition->getAtLeast());
-        $this->assertSame(INF, $proposition->getAtMost());
+        $this->assertSame(1, $proposition->atLeast());
+        $this->assertSame(INF, $proposition->atMost());
 
         $this->setExpectedException("\\InvalidArgumentException");
         $proposition = new Proposition(3, 1);
@@ -42,7 +42,7 @@ class PropositionTest extends \PHPUnit_Framework_TestCase
             ->addCondition($conditions[0])
             ->addConditions(array_slice($conditions, 1));
 
-        $this->assertEquals($conditions, $proposition->getConditions());
+        $this->assertEquals($conditions, $proposition->conditions());
     }
 
     function testResolveToCallback()

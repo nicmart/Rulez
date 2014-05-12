@@ -19,17 +19,29 @@ use NicMart\Rulez\Maps\MapsCollection;
 class Proposition
 {
     /**
-     * @var array[Condition]
+     * @var Condition[]
      */
     private $conditions = [];
+
     /**
-     * @var
+     * @var int
      */
     private $atLeast;
+
     /**
-     * @var
+     * @var int
      */
     private $atMost;
+
+    /**
+     * @var int
+     */
+    private $numOfMaps = 0;
+
+    /**
+     * @var array
+     */
+    private $maps = [];
 
     /**
      * @param int $atLeast
@@ -54,6 +66,11 @@ class Proposition
     {
         $this->conditions[] = $condition;
 
+        if (!isset($this->maps[$condition->getMapName()])) {
+            $this->numOfMaps++;
+            $this->maps[$condition->getMapName()] = true;
+        }
+
         return $this;
     }
 
@@ -70,11 +87,21 @@ class Proposition
     }
 
     /**
-     * @return array
+     * @return Condition[]
      */
-    function getConditions()
+    function conditions()
     {
         return $this->conditions;
+    }
+
+    /**
+     * The number of unique maps used in this proposition
+     *
+     * @return int
+     */
+    function numOfMaps()
+    {
+        return $this->numOfMaps;
     }
 
     /**
@@ -82,7 +109,7 @@ class Proposition
      *
      * @return mixed
      */
-    public function getAtLeast()
+    public function atLeast()
     {
         return $this->atLeast;
     }
@@ -92,7 +119,7 @@ class Proposition
      *
      * @return mixed
      */
-    public function getAtMost()
+    public function atMost()
     {
         return $this->atMost;
     }
@@ -117,11 +144,11 @@ class Proposition
                 if ($callbackCondition($x))
                     $matched++;
 
-                if ($matched + $remaining < $this->getAtLeast())
+                if ($matched + $remaining < $this->atLeast())
                     return false;
-                if ($matched >= $this->getAtLeast() && $matched + $remaining <= $this->getAtMost())
+                if ($matched >= $this->atLeast() && $matched + $remaining <= $this->atMost())
                     return true;
-                if ($matched > $this->getAtMost())
+                if ($matched > $this->atMost())
                     return false;
             }
 
