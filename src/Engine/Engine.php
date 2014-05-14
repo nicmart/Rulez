@@ -25,17 +25,25 @@ class Engine
     /**
      * @var array
      */
-    private $mapsValuesToRules = [];
+    private $valuesToEvaluations = [];
 
     /**
      * @var array
      */
-    private $mapsToRules = [];
+    private $mapsToEvaluations = [];
 
     /**
      * @var Rule[]
      */
     private $rules = [];
+
+    /**
+     * @param MapsCollection $maps
+     */
+    function __construct(MapsCollection $maps)
+    {
+        $this->maps = $maps;
+    }
 
     /**
      * @param Rule $rule
@@ -44,15 +52,35 @@ class Engine
      */
     function addRule(Rule $rule)
     {
+        $eval = $this->createEvaluationFromRule($rule);
         foreach ($rule->proposition()->conditions() as $condition) {
             $this
-                ->registerRuleInValuesMap($rule, $condition->getMapName(), $condition->getValue())
-                ->registerRuleInRulesMap($rule, $condition->getMapName())
+                ->registerPropEvalInValuesMap($eval, $condition->getMapName(), $condition->getValue())
+                ->registerRuleInRulesMap($eval, $condition->getMapName())
             ;
-
         }
 
         return $this;
+    }
+
+    function run($x)
+    {
+        foreach($this->maps as $mapName => $map)
+        {
+            if (!isset($this->mapsToEvaluations[$mapName]))
+                continue;
+
+            $value = $map($x);
+            if (isset($this->valuesToEvaluations[$mapName][$value])) {
+                /** @var PropositionEvaluation $propEval */
+                foreach($this->valuesToEvaluations[$mapName][$value] as $propEval) {
+                    if (!$propEval->isResolved())
+                        $propEval->signalMatch();
+                }
+            }
+
+            
+        }
     }
 
     /**
@@ -64,22 +92,22 @@ class Engine
 
     }
 
-    private function registerRuleInValuesMap(Rule $rule, $mapName, $value)
+    private function registerPropEvalInValuesMap(PropositionEvaluation $propEval, $mapName, $value)
     {
-        if (!isset($this->mapsValuesToRules[$mapName][$value]))
-            $this->mapsValuesToRules[$mapName][$value] = new \SplObjectStorage;
+        if (!isset($this->valuesToEvaluations[$mapName][$value]))
+            $this->valuesToEvaluations[$mapName][$value] = new \SplObjectStorage;
 
-        $this->mapsValuesToRules[$mapName][$value]->attach($rule);
+        $this->valuesToEvaluations[$mapName][$value]->attach($propEval);
 
         return $this;
     }
 
-    private function registerRuleInRulesMap(Rule $rule, $mapName)
+    private function registerRuleInRulesMap(PropositionEvaluation $propEval, $mapName)
     {
-        if (!isset($this->mapsToRules[$mapName]))
-            $this->mapsToRules[$mapName] = new \SplObjectStorage;
+        if (!isset($this->mapsToEvaluations[$mapName]))
+            $this->mapsToEvaluations[$mapName] = new \SplObjectStorage;
 
-        $this->mapsToRules[$mapName]->attach($rule);
+        $this->mapsToEvaluations[$mapName]->attach($propEval);
 
         return $this;
     }
