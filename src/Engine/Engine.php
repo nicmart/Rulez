@@ -33,9 +33,14 @@ class Engine
     private $mapsToEvaluations = [];
 
     /**
-     * @var Rule[]
+     * @var \SplObjectStorage[]
      */
-    private $rules = [];
+    private $propositionsEvals;
+
+    /**
+     * @var \SplObjectStorage
+     */
+    private $matches;
 
     /**
      * @param MapsCollection $maps
@@ -43,6 +48,8 @@ class Engine
     function __construct(MapsCollection $maps)
     {
         $this->maps = $maps;
+        $this->matches = new \SplObjectStorage;
+        $this->propositionsEvals = new \SplObjectStorage;
     }
 
     /**
@@ -53,10 +60,12 @@ class Engine
     function addRule(Rule $rule)
     {
         $eval = $this->createEvaluationFromRule($rule);
+        $this->propositionsEvals->attach($eval);
+
         foreach ($rule->proposition()->conditions() as $condition) {
             $this
                 ->registerPropEvalInValuesMap($eval, $condition->getMapName(), $condition->getValue())
-                ->registerRuleInRulesMap($eval, $condition->getMapName())
+                ->registerPropEvalInRulesMap($eval, $condition->getMapName())
             ;
         }
 
@@ -79,17 +88,28 @@ class Engine
                 }
             }
 
-            
+            /** @var PropositionEvaluation $propEval */
+            foreach ($this->mapsToEvaluations[$mapName] as $propEval) {
+                $propEval->signalMapUsed();
+            }
         }
+
+        $matches = $this->matches;
+
+        $this->reset();
+
+        return $matches;
     }
 
     /**
      * @param bool $resolvedStatus
      * @param Rule $rule
+     * @param PropositionEvaluation $eval
      */
-    function ruleResolved($resolvedStatus, Rule $rule)
+    function ruleResolved($resolvedStatus, Rule $rule, PropositionEvaluation $eval)
     {
-
+        if ($resolvedStatus)
+            $this->matches->attach($rule);
     }
 
     private function registerPropEvalInValuesMap(PropositionEvaluation $propEval, $mapName, $value)
@@ -102,7 +122,7 @@ class Engine
         return $this;
     }
 
-    private function registerRuleInRulesMap(PropositionEvaluation $propEval, $mapName)
+    private function registerPropEvalInRulesMap(PropositionEvaluation $propEval, $mapName)
     {
         if (!isset($this->mapsToEvaluations[$mapName]))
             $this->mapsToEvaluations[$mapName] = new \SplObjectStorage;
@@ -120,9 +140,22 @@ class Engine
             $proposition->numOfMaps(),
             $proposition->atLeast(),
             $proposition->atMost(),
-            function($state) use ($rule) {
-                $this->ruleResolved($state, $rule);
+            function($state, $eval) use ($rule) {
+                $this->ruleResolved($state, $rule, $eval);
             }
         );
+    }
+
+    private function reset()
+    {
+        $this->matches = new \SplObjectStorage;
+
+        /** @var PropositionEvaluation $propEval */
+        foreach($this->propositionsEvals as $propEval)
+        {
+            $propEval->reset();
+        }
+
+        return $this;
     }
 } 

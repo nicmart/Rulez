@@ -114,6 +114,10 @@ class PropositionEvaluation
         return $this->resolvedStatus !== null;
     }
 
+    /**
+     * @return bool|null
+     * @throws \LogicException
+     */
     function resolvedStatus()
     {
         if (!$this->isResolved())

@@ -21,7 +21,7 @@ class Rule
     private $proposition;
 
     /**
-     * @var callable
+     * @var
      */
     private $production;
 
@@ -29,7 +29,7 @@ class Rule
      * @param Proposition $proposition
      * @param callable $production
      */
-    function __construct(Proposition $proposition, callable $production)
+    function __construct(Proposition $proposition, $production)
     {
         $this->proposition = $proposition;
         $this->production = $production;
