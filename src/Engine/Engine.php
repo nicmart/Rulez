@@ -25,6 +25,11 @@ class Engine implements EngineInterface
     /**
      * @var array
      */
+    private $activeMaps = [];
+
+    /**
+     * @var array
+     */
     private $valuesToEvaluations = [];
 
     /**
@@ -76,6 +81,7 @@ class Engine implements EngineInterface
                 ->registerPropEvalInValuesMap($eval, $condition->getMapName(), $condition->getValue())
                 ->registerPropEvalInRulesMap($eval, $condition->getMapName())
             ;
+            $this->activeMaps[$condition->getMapName()] = $condition->getMapName();
         }
 
         return $this;
@@ -87,12 +93,12 @@ class Engine implements EngineInterface
      */
     function run($x)
     {
-        foreach($this->maps as $mapName => $map)
+        foreach($this->activeMaps as $mapName)
         {
             if (!isset($this->mapsToEvaluations[$mapName]))
                 continue;
 
-            $value = $map($x);
+            $value = $this->maps[$mapName]($x);
             if (isset($this->valuesToEvaluations[$mapName][$value])) {
                 /** @var PropositionEvaluation $propEval */
                 foreach($this->valuesToEvaluations[$mapName][$value] as $propEval) {
@@ -171,4 +177,4 @@ class Engine implements EngineInterface
 
         return $this;
     }
-} 
+}
