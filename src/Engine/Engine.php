@@ -15,7 +15,7 @@ use NicMart\Rulez\Condition\Proposition;
 use NicMart\Rulez\Condition\PropositionEvaluation;
 use NicMart\Rulez\Maps\MapsCollection;
 
-class Engine
+class Engine implements EngineInterface
 {
     /**
      * @var MapsCollection
@@ -47,15 +47,24 @@ class Engine
      */
     function __construct(MapsCollection $maps)
     {
-        $this->maps = $maps;
+        $this->setMapsCollection($maps);
         $this->matches = new \SplObjectStorage;
         $this->propositionsEvals = new \SplObjectStorage;
     }
 
     /**
-     * @param Rule $rule
-     *
-     * @return $this
+     * {@inheritdoc}
+     */
+    function setMapsCollection(MapsCollection $maps)
+    {
+        $this->maps = $maps;
+
+        return $this;
+    }
+
+
+    /**
+     * {@inheritdoc}
      */
     function addRule(Rule $rule)
     {
@@ -72,6 +81,10 @@ class Engine
         return $this;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     function run($x)
     {
         foreach($this->maps as $mapName => $map)

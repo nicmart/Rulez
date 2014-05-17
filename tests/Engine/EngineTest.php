@@ -15,6 +15,7 @@ use NicMart\Rulez\Condition\Condition;
 use NicMart\Rulez\Condition\Proposition;
 use NicMart\Rulez\Engine\Engine;
 use NicMart\Rulez\Engine\Rule;
+use NicMart\Rulez\Engine\ScanEngine;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class EngineTest extends \PHPUnit_Framework_TestCase
@@ -34,6 +35,7 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         $collection[">50"] = function($x) { return $x > 50; };
 
         $engine = new Engine($collection);
+        $scanEngine = new ScanEngine($collection);
 
         $prop1 = (new Proposition(1))
             ->addCondition(new Condition("%3", 0))
@@ -69,12 +71,18 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->addRule(new Rule($prop4, "NOT 3k, 5k, 5k + 1"))
             ->addRule(new Rule($prop5, "Greater than 50"))
         ;
-
-
+        $scanEngine
+            ->addRule(new Rule($prop1, "Mod 3 o 5"))
+            ->addRule(new Rule($prop2, "Mod 15"))
+            ->addRule(new Rule($prop3, "10-14"))
+            ->addRule(new Rule($prop4, "NOT 3k, 5k, 5k + 1"))
+            ->addRule(new Rule($prop5, "Greater than 50"))
+        ;
 
         $n = rand(0, 100);
         var_dump($n);
         var_dump($this->toAry($engine->run($n)));
+        var_dump($this->toAry($scanEngine->run($n)));
     }
 
     private function toAry(\SplObjectStorage $storage)
