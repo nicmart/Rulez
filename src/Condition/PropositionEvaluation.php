@@ -11,12 +11,10 @@
 namespace NicMart\Rulez\Condition;
 
 
-/**
- * Class PropositionEvaluation
- * @package NicMart\Rulez\Condition
- */
-class PropositionEvaluation
+class PropositionEvaluation implements PropositionEvaluationInterface
 {
+    use PropositionEvaluationTrait;
+
     /**
      * @var int
      */
@@ -33,11 +31,6 @@ class PropositionEvaluation
     private $atMost;
 
     /**
-     * @var callable
-     */
-    private $resolveCallback;
-
-    /**
      * @var int
      */
     private $matched = 0;
@@ -46,11 +39,6 @@ class PropositionEvaluation
      * @var int
      */
     private $remainingMaps;
-
-    /**
-     * @var bool|null
-     */
-    private $resolvedStatus = null;
 
     /**
      * @param $numOfMaps
@@ -67,7 +55,7 @@ class PropositionEvaluation
     }
 
     /**
-     * @return $this
+     * {@inheritdoc}
      */
     function signalMatch()
     {
@@ -77,7 +65,7 @@ class PropositionEvaluation
     }
 
     /**
-     * @return $this
+     * {@inheritdoc}
      */
     function signalMapUsed()
     {
@@ -94,48 +82,11 @@ class PropositionEvaluation
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     function reset()
     {
         $this->matched = 0;
         $this->remainingMaps = $this->numOfMaps;
         $this->resolvedStatus = null;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    function isResolved()
-    {
-        return $this->resolvedStatus !== null;
-    }
-
-    /**
-     * @return bool|null
-     * @throws \LogicException
-     */
-    function resolvedStatus()
-    {
-        if (!$this->isResolved())
-            throw new \LogicException("The proposition is not resolved yet.");
-
-        return $this->resolvedStatus;
-    }
-
-    /**
-     * @param bool $resolvedStatus
-     *
-     * @return $this
-     */
-    private function resolve($resolvedStatus)
-    {
-        $this->resolvedStatus = $resolvedStatus;
-        $callback = $this->resolveCallback;
-        $callback($resolvedStatus, $this);
 
         return $this;
     }

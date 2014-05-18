@@ -12,7 +12,10 @@ namespace NicMart\Rulez\Engine;
 
 
 use NicMart\Rulez\Condition\Proposition;
+use NicMart\Rulez\Condition\PropositionEvaluationInterface;
 use NicMart\Rulez\Condition\PropositionEvaluation;
+use NicMart\Rulez\Condition\AndPropositionEvaluation;
+use NicMart\Rulez\Condition\OrPropositionEvaluation;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class Engine implements EngineInterface
@@ -21,11 +24,6 @@ class Engine implements EngineInterface
      * @var MapsCollection
      */
     private $maps;
-
-    /**
-     * @var array
-     */
-    private $activeMaps = [];
 
     /**
      * @var array
@@ -81,7 +79,6 @@ class Engine implements EngineInterface
                 ->registerPropEvalInValuesMap($eval, $condition->getMapName(), $condition->getValue())
                 ->registerPropEvalInRulesMap($eval, $condition->getMapName())
             ;
-            $this->activeMaps[$condition->getMapName()] = $condition->getMapName();
         }
 
         return $this;
@@ -93,23 +90,22 @@ class Engine implements EngineInterface
      */
     function run($x)
     {
-        foreach($this->activeMaps as $mapName)
+        foreach($this->mapsToEvaluations as $mapName => $evaluations)
         {
-            if (!isset($this->mapsToEvaluations[$mapName]))
-                continue;
-
             $value = $this->maps[$mapName]($x);
             if (isset($this->valuesToEvaluations[$mapName][$value])) {
-                /** @var PropositionEvaluation $propEval */
+                /** @var PropositionEvaluationInterface $propEval */
                 foreach($this->valuesToEvaluations[$mapName][$value] as $propEval) {
-                    if (!$propEval->isResolved())
+                    if (!$propEval->isResolved()) {
                         $propEval->signalMatch();
+                    }
                 }
             }
 
-            /** @var PropositionEvaluation $propEval */
-            foreach ($this->mapsToEvaluations[$mapName] as $propEval) {
-                $propEval->signalMapUsed();
+            /** @var PropositionEvaluationInterface $propEval */
+            foreach ($evaluations as $propEval) {
+                if (!$propEval->isResolved())
+                    $propEval->signalMapUsed();
             }
         }
 
@@ -123,15 +119,15 @@ class Engine implements EngineInterface
     /**
      * @param bool $resolvedStatus
      * @param Rule $rule
-     * @param PropositionEvaluation $eval
+     * @param PropositionEvaluationInterface $eval
      */
-    function ruleResolved($resolvedStatus, Rule $rule, PropositionEvaluation $eval)
+    function ruleResolved($resolvedStatus, Rule $rule, PropositionEvaluationInterface $eval)
     {
         if ($resolvedStatus)
             $this->matches->attach($rule);
     }
 
-    private function registerPropEvalInValuesMap(PropositionEvaluation $propEval, $mapName, $value)
+    private function registerPropEvalInValuesMap(PropositionEvaluationInterface $propEval, $mapName, $value)
     {
         if (!isset($this->valuesToEvaluations[$mapName][$value]))
             $this->valuesToEvaluations[$mapName][$value] = new \SplObjectStorage;
@@ -141,7 +137,7 @@ class Engine implements EngineInterface
         return $this;
     }
 
-    private function registerPropEvalInRulesMap(PropositionEvaluation $propEval, $mapName)
+    private function registerPropEvalInRulesMap(PropositionEvaluationInterface $propEval, $mapName)
     {
         if (!isset($this->mapsToEvaluations[$mapName]))
             $this->mapsToEvaluations[$mapName] = new \SplObjectStorage;
@@ -154,14 +150,23 @@ class Engine implements EngineInterface
     private function createEvaluationFromRule(Rule $rule)
     {
         $proposition = $rule->proposition();
+        $callback = function($state, $eval) use ($rule) {
+            $this->ruleResolved($state, $rule, $eval);
+        };
+
+        if ($proposition->atLeast() >= $proposition->numOfMaps()) {
+            return new AndPropositionEvaluation($proposition->numOfMaps(), $callback);
+        }
+
+        if ($proposition->atLeast() == 1 && count($proposition->conditions()) <= $proposition->atMost()) {
+            return new OrPropositionEvaluation($proposition->numOfMaps(), $callback);
+        }
 
         return new PropositionEvaluation(
             $proposition->numOfMaps(),
             $proposition->atLeast(),
             $proposition->atMost(),
-            function($state, $eval) use ($rule) {
-                $this->ruleResolved($state, $rule, $eval);
-            }
+            $callback
         );
     }
 
@@ -169,7 +174,7 @@ class Engine implements EngineInterface
     {
         $this->matches = new \SplObjectStorage;
 
-        /** @var PropositionEvaluation $propEval */
+        /** @var PropositionEvaluationInterface $propEval */
         foreach($this->propositionsEvals as $propEval)
         {
             $propEval->reset();

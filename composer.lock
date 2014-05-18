@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8d65763ddcb3088caa51071d5ae47d57",
+    "hash": "f8310a3bec2e04826095dd3f3deb30e3",
     "packages": [
 
     ],
@@ -150,16 +150,16 @@
         },
         {
             "name": "nicmart/benchmark",
-            "version": "v0.1.0",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nicmart/Benchmark.git",
-                "reference": "5f08533a669cf3e28e94e374d6dd01945933e7d7"
+                "reference": "ccc4054873fda80c39f11619ad04978d9a5f9a17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nicmart/Benchmark/zipball/5f08533a669cf3e28e94e374d6dd01945933e7d7",
-                "reference": "5f08533a669cf3e28e94e374d6dd01945933e7d7",
+                "url": "https://api.github.com/repos/nicmart/Benchmark/zipball/ccc4054873fda80c39f11619ad04978d9a5f9a17",
+                "reference": "ccc4054873fda80c39f11619ad04978d9a5f9a17",
                 "shasum": ""
             },
             "require": {
@@ -189,7 +189,7 @@
                 }
             ],
             "description": "A framework for benchmarking php code.",
-            "time": "2014-05-17 08:39:03"
+            "time": "2014-05-18 11:36:35"
         },
         {
             "name": "nicmart/numbers",

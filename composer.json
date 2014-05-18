@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master",
-        "nicmart/benchmark": "v0.1.0"
+        "nicmart/benchmark": "v0.1.1"
     },
     "minimum-stability": "dev",
     "autoload": {
