@@ -16,6 +16,7 @@ use NicMart\Rulez\Condition\PropositionEvaluationInterface;
 use NicMart\Rulez\Condition\PropositionEvaluation;
 use NicMart\Rulez\Condition\AndPropositionEvaluation;
 use NicMart\Rulez\Condition\OrPropositionEvaluation;
+use NicMart\Rulez\Condition\SingleConditionPropositionEvaluation;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class Engine implements EngineInterface
@@ -29,6 +30,11 @@ class Engine implements EngineInterface
      * @var array
      */
     private $valuesToEvaluations = [];
+
+    /**
+     * @var array
+     */
+    private $valuesToProductions = [];
 
     /**
      * @var array
@@ -154,6 +160,10 @@ class Engine implements EngineInterface
             $this->ruleResolved($state, $rule, $eval);
         };
 
+        if ($proposition->atLeast() == 1 && count($proposition->conditions()) == 1) {
+            return new SingleConditionPropositionEvaluation($callback);
+        }
+
         if ($proposition->atLeast() >= $proposition->numOfMaps()) {
             return new AndPropositionEvaluation($proposition->numOfMaps(), $callback);
         }
@@ -172,11 +182,11 @@ class Engine implements EngineInterface
 
     private function reset()
     {
+        #$this->matches->removeAllExcept(new \SplObjectStorage);
         $this->matches = new \SplObjectStorage;
 
         /** @var PropositionEvaluationInterface $propEval */
-        foreach($this->propositionsEvals as $propEval)
-        {
+        foreach($this->propositionsEvals as $propEval) {
             $propEval->reset();
         }
 

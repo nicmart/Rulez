@@ -143,6 +143,27 @@ function addPropsToEngine(EngineInterface $engine, array $props)
 $groups[] = benchmark(
     collection(3), [
         (new Proposition(1))
+            ->addCondition(new Condition("0", "s"))
+            //->addCondition(new Condition("0", "a"))
+    ],
+    [10000],
+    "asdasdasdasdasdasdasdasdasdasdasd",
+    "Double stupid matching condition"
+);
+
+$groups[] = benchmark(
+    collection(3), [
+        (new Proposition(1))
+            ->addCondition(new Condition("0", "b"))
+    ],
+    [5000],
+    "asdasdasdasdasdasdasdasdasdasdasd",
+    "Single stupid not matching condition"
+);
+
+/*$groups[] = benchmark(
+    collection(3), [
+        (new Proposition(1))
             ->addCondition(new Condition("0", "x"))
             ->addCondition(new Condition("0", "y"))
             ->addCondition(new Condition("0", "z"))
@@ -159,7 +180,7 @@ $groups[] = benchmark(
             ->addCondition(new Condition("2", "m"))
             ->addCondition(new Condition("0", "a"))
     ],
-    [100000],
+    [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
     "Single OR Proposition"
 );
@@ -168,13 +189,13 @@ $groups[] = benchmark(
     collection(10), [
         (new Proposition(3, 3))
             ->addCondition(new Condition("0", "a"))
-            ->addCondition(new Condition("0", "b"))
             ->addCondition(new Condition("1", "s"))
+            ->addCondition(new Condition("2", "d"))
     ],
-    [100000],
+    [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
     "Single AND Proposition"
-);
+);*/
 
 /*$groups[] = benchmark(
     $collection,
