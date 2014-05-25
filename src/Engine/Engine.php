@@ -15,9 +15,6 @@ use NicMart\Rulez\Condition\PositiveOnlyPropositionEvaluation;
 use NicMart\Rulez\Condition\Proposition;
 use NicMart\Rulez\Condition\PropositionEvaluationInterface;
 use NicMart\Rulez\Condition\PropositionEvaluation;
-use NicMart\Rulez\Condition\AndPropositionEvaluation;
-use NicMart\Rulez\Condition\OrPropositionEvaluation;
-use NicMart\Rulez\Condition\SingleConditionPropositionEvaluation;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class Engine implements EngineInterface
@@ -87,6 +84,7 @@ class Engine implements EngineInterface
                 $this->activeMaps[$mapName] = $this->maps[$mapName];
 
             $this->indexEvaluation($eval, $condition->getMapName(), $condition->getValue());
+
         }
 
         return $this;
