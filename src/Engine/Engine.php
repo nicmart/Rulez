@@ -11,6 +11,7 @@
 namespace NicMart\Rulez\Engine;
 
 
+use NicMart\Rulez\Condition\PositiveOnlyPropositionEvaluation;
 use NicMart\Rulez\Condition\Proposition;
 use NicMart\Rulez\Condition\PropositionEvaluationInterface;
 use NicMart\Rulez\Condition\PropositionEvaluation;
@@ -29,17 +30,17 @@ class Engine implements EngineInterface
     /**
      * @var array
      */
-    private $valuesToEvaluations = [];
+    private $mapsValuesToEvals = [];
 
     /**
      * @var array
      */
-    private $valuesToProductions = [];
+    private $mapsToNegativeAwareEvals = [];
 
     /**
      * @var array
      */
-    private $mapsToEvaluations = [];
+    private $activeMaps = [];
 
     /**
      * @var \SplObjectStorage[]
@@ -71,7 +72,6 @@ class Engine implements EngineInterface
         return $this;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -81,10 +81,12 @@ class Engine implements EngineInterface
         $this->propositionsEvals->attach($eval);
 
         foreach ($rule->proposition()->conditions() as $condition) {
-            $this
-                ->registerPropEvalInValuesMap($eval, $condition->getMapName(), $condition->getValue())
-                ->registerPropEvalInRulesMap($eval, $condition->getMapName())
-            ;
+            $mapName = $condition->getMapName();
+
+            if (!isset($this->activeMaps[$mapName]))
+                $this->activeMaps[$mapName] = $this->maps[$mapName];
+
+            $this->indexEvaluation($eval, $condition->getMapName(), $condition->getValue());
         }
 
         return $this;
@@ -96,12 +98,12 @@ class Engine implements EngineInterface
      */
     function run($x)
     {
-        foreach($this->mapsToEvaluations as $mapName => $evaluations)
+        foreach($this->activeMaps as $mapName => $map)
         {
-            $value = $this->maps[$mapName]($x);
-            if (isset($this->valuesToEvaluations[$mapName][$value])) {
+            $value = $map($x);
+            if (isset($this->mapsValuesToEvals[$mapName][$value])) {
                 /** @var PropositionEvaluationInterface $propEval */
-                foreach($this->valuesToEvaluations[$mapName][$value] as $propEval) {
+                foreach($this->mapsValuesToEvals[$mapName][$value] as $propEval) {
                     if (!$propEval->isResolved()) {
                         $propEval->signalMatch();
                     }
@@ -109,7 +111,7 @@ class Engine implements EngineInterface
             }
 
             /** @var PropositionEvaluationInterface $propEval */
-            foreach ($evaluations as $propEval) {
+            foreach ($this->mapsToNegativeAwareEvals[$mapName] as $propEval) {
                 if (!$propEval->isResolved())
                     $propEval->signalMapUsed();
             }
@@ -133,22 +135,18 @@ class Engine implements EngineInterface
             $this->matches->attach($rule);
     }
 
-    private function registerPropEvalInValuesMap(PropositionEvaluationInterface $propEval, $mapName, $value)
+    private function indexEvaluation(PropositionEvaluationInterface $propEval, $mapName, $value)
     {
-        if (!isset($this->valuesToEvaluations[$mapName][$value]))
-            $this->valuesToEvaluations[$mapName][$value] = new \SplObjectStorage;
+        if (!isset($this->mapsValuesToEvals[$mapName][$value]))
+            $this->mapsValuesToEvals[$mapName][$value] = new \SplObjectStorage;
 
-        $this->valuesToEvaluations[$mapName][$value]->attach($propEval);
+        $this->mapsValuesToEvals[$mapName][$value]->attach($propEval);
 
-        return $this;
-    }
+        if (!isset($this->mapsToNegativeAwareEvals[$mapName]))
+            $this->mapsToNegativeAwareEvals[$mapName] = new \SplObjectStorage;
 
-    private function registerPropEvalInRulesMap(PropositionEvaluationInterface $propEval, $mapName)
-    {
-        if (!isset($this->mapsToEvaluations[$mapName]))
-            $this->mapsToEvaluations[$mapName] = new \SplObjectStorage;
-
-        $this->mapsToEvaluations[$mapName]->attach($propEval);
+        if (!$propEval instanceof PositiveOnlyPropositionEvaluation)
+            $this->mapsToNegativeAwareEvals[$mapName]->attach($propEval);
 
         return $this;
     }
@@ -160,16 +158,8 @@ class Engine implements EngineInterface
             $this->ruleResolved($state, $rule, $eval);
         };
 
-        if ($proposition->atLeast() == 1 && count($proposition->conditions()) == 1) {
-            return new SingleConditionPropositionEvaluation($callback);
-        }
-
-        if ($proposition->atLeast() >= $proposition->numOfMaps()) {
-            return new AndPropositionEvaluation($proposition->numOfMaps(), $callback);
-        }
-
-        if ($proposition->atLeast() == 1 && count($proposition->conditions()) <= $proposition->atMost()) {
-            return new OrPropositionEvaluation($proposition->numOfMaps(), $callback);
+        if ($proposition->atLeast() > 0 && count($proposition->conditions()) <= $proposition->atMost()) {
+            return new PositiveOnlyPropositionEvaluation($proposition->atLeast(), $callback);
         }
 
         return new PropositionEvaluation(
@@ -186,7 +176,7 @@ class Engine implements EngineInterface
         $this->matches = new \SplObjectStorage;
 
         /** @var PropositionEvaluationInterface $propEval */
-        foreach($this->propositionsEvals as $propEval) {
+        foreach ($this->propositionsEvals as $propEval) {
             $propEval->reset();
         }
 

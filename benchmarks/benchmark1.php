@@ -140,7 +140,7 @@ function addPropsToEngine(EngineInterface $engine, array $props)
     return $engine;
 }
 
-$groups[] = benchmark(
+/*$groups[] = benchmark(
     collection(3), [
         (new Proposition(1))
             ->addCondition(new Condition("0", "s"))
@@ -149,7 +149,7 @@ $groups[] = benchmark(
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
     "Double stupid matching condition"
-);
+);*/
 
 $groups[] = benchmark(
     collection(3), [
@@ -161,7 +161,21 @@ $groups[] = benchmark(
     "Single stupid not matching condition"
 );
 
-/*$groups[] = benchmark(
+$clonedPropositions = [];
+$p = (new Proposition(1))
+        ->addCondition(new Condition("0", "b"));
+for ($i = 0; $i < 400; $i++) {
+    $clonedPropositions[] = $p;
+}
+
+$groups[] = benchmark(
+    collection(3), $clonedPropositions,
+    [5000],
+    "asdasdasdasdasdasdasdasdasdasdasd",
+    "A lot of cloned propositions"
+);
+
+$groups[] = benchmark(
     collection(3), [
         (new Proposition(1))
             ->addCondition(new Condition("0", "x"))
@@ -195,7 +209,7 @@ $groups[] = benchmark(
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
     "Single AND Proposition"
-);*/
+);
 
 /*$groups[] = benchmark(
     $collection,
@@ -250,7 +264,7 @@ $groups[] = benchmark(
 );*/
 
 /*$groups[] = benchmark(
-    $collection,
+    collection(20),
     [(new Proposition(1))
         ->addCondition(new Condition("0", "3"))
         ->addCondition(new Condition("0", "2"))
@@ -317,7 +331,44 @@ $groups[] = benchmark(
         ->addCondition(new Condition("0", "0"))
         ->addCondition(new Condition("1", "1"))
         ->addCondition(new Condition("2", "2"))
+        ->addCondition(new Condition("3", "4")),
+    (new Proposition(10, 10))
+        ->addCondition(new Condition("0", "0"))
+        ->addCondition(new Condition("1", "1"))
+        ->addCondition(new Condition("2", "2"))
+        ->addCondition(new Condition("3", "3"))
+        ->addCondition(new Condition("4", "4"))
+        ->addCondition(new Condition("5", "5"))
+        ->addCondition(new Condition("6", "6"))
+        ->addCondition(new Condition("7", "7"))
+        ->addCondition(new Condition("8", "8"))
+        ->addCondition(new Condition("9", "9")),
+    (new Proposition(11, 11))
+        ->addCondition(new Condition("0", "0"))
+        ->addCondition(new Condition("1", "1"))
+        ->addCondition(new Condition("2", "2"))
+        ->addCondition(new Condition("3", "3"))
+        ->addCondition(new Condition("4", "4"))
+        ->addCondition(new Condition("5", "5"))
+        ->addCondition(new Condition("6", "6"))
+        ->addCondition(new Condition("7", "7"))
+        ->addCondition(new Condition("8", "8"))
+        ->addCondition(new Condition("9", "9"))
+        ->addCondition(new Condition("0", "1"))
+        ->addCondition(new Condition("10", "0")),
+    (new Proposition(1))
+        ->addCondition(new Condition("0", "1"))
+        ->addCondition(new Condition("1", "2"))
+        ->addCondition(new Condition("2", "3"))
         ->addCondition(new Condition("3", "4"))
+        ->addCondition(new Condition("4", "5"))
+        ->addCondition(new Condition("5", "6"))
+        ->addCondition(new Condition("6", "7"))
+        ->addCondition(new Condition("7", "7"))
+        ->addCondition(new Condition("8", "8"))
+        ->addCondition(new Condition("9", "9"))
+        ->addCondition(new Condition("0", "1"))
+        ->addCondition(new Condition("10", "0")),
     ],
 
     [1000, 10000],
@@ -325,9 +376,9 @@ $groups[] = benchmark(
     "Single prop, 5 conditions, 2 maps"
 );*/
 
-/*$groups[] = benchmark(
-    $collection,
-    [prop(10, 1), prop(5, 1), prop(3, 3, 3), prop(3, 0, 0)],
+$groups[] = benchmark(
+    collection(10),
+    [prop(10, 10, 1), prop(10, 5, 1), prop(10, 3, 3, 3), prop(10, 3, 0, 0)],
 
     [1000, 10000],
     "01234567890123456789120893710928370198237918237981273873872873",
@@ -335,22 +386,22 @@ $groups[] = benchmark(
 );
 
 $groups[] = benchmark(
-    $collection,
-    [prop(10, 1), prop(5, 5, 5), prop(20, 1), prop(3, 0, 0), prop(15, 1), prop(20, 5), prop(50, 1), prop(50, 1), prop(50, 1), prop(100, 1)],
+    collection(20),
+    [prop(20, 10, 1), prop(20, 5, 5, 5), prop(20, 20, 1), prop(20, 3, 0, 0), prop(20, 15, 1), prop(20, 20, 5), prop(20, 50, 1), prop(20, 50, 1), prop(20, 50, 1), prop(20, 100, 1)],
 
     [1000, 10000],
     "01234567890123456789120893710928370198237918237981273873872873",
     "Random conditions"
-);*/
+);
 
-/*$groups[] = benchmark(
-    $collection,
-    [prop(100, 20), prop(100, 20, 30), prop(20, 1), prop(30, 30)],
+$groups[] = benchmark(
+    collection(30),
+    [prop(30, 100, 20), prop(30, 100, 20, 30), prop(30, 20, 1), prop(30, 30, 30)],
 
     [1000],
     "01234567890123456789120893710928370198237918237981273873872873",
     "Random conditions"
-);*/
+);
 
 /*$bench = new \Nicmart\Benchmark\VariabeSizeEngine('NumberOfMaps');
 $bench
@@ -361,7 +412,7 @@ $bench
 $bench->progression(2000, 8, 5);
 
 $groups[] = $bench->getResults();
-
+*/
 $bench = new \Nicmart\Benchmark\VariabeSizeEngine('Number of Propositions');
 $bench
     ->registerFunctional('scan', 'ScanEngine', generateNumberOfPropositionProgression(ScanEngine::class), true)
@@ -370,7 +421,7 @@ $bench
 
 $bench->progression(5000, 4, 5);
 
-$groups[] = $bench->getResults();*/
+$groups[] = $bench->getResults();
 
 $template = new \Nicmart\Benchmark\PHPTemplate;
 echo $template->render(array('groups' => $groups));
