@@ -7,7 +7,7 @@
  *
  * @author Nicolò Martini <nicmartnic@gmail.com>
  */
-namespace NicMart\Rulez\Condition;
+namespace NicMart\Rulez\Expression;
 
 
 /**

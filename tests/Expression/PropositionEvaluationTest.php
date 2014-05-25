@@ -8,9 +8,9 @@
  * @author Nicolò Martini <nicmartnic@gmail.com>
  */
 
-namespace NicMart\Rulez\Test\Condition;
+namespace NicMart\Rulez\Test\Expression;
 
-use NicMart\Rulez\Condition\PropositionEvaluation;
+use NicMart\Rulez\Expression\PropositionEvaluation;
 
 class PropositionEvaluationTest extends \PHPUnit_Framework_TestCase
 {

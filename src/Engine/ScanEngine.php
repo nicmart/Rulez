@@ -12,7 +12,7 @@ namespace NicMart\Rulez\Engine;
 
 
 use NicMart\Rulez\Maps\MapsCollection;
-use NicMart\Rulez\Test\Condition\PropositionToCallback;
+use NicMart\Rulez\Test\Expression\PropositionToCallback;
 
 class ScanEngine implements EngineInterface
 {

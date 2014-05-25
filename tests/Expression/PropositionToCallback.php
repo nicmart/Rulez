@@ -8,10 +8,10 @@
  * @author Nicolò Martini <nicmartnic@gmail.com>
  */
 
-namespace NicMart\Rulez\Test\Condition;
+namespace NicMart\Rulez\Test\Expression;
 
 
-use NicMart\Rulez\Condition\Proposition;
+use NicMart\Rulez\Expression\AndProposition;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class PropositionToCallback
@@ -23,14 +23,14 @@ class PropositionToCallback
         $this->mapsCollection = $collection;
     }
 
-    function getCallback(Proposition $proposition)
+    function getCallback(AndProposition $proposition)
     {
-        if ($proposition->atLeast() == 1 && count($proposition->conditions()) <= $proposition->atMost())
-            return $this->generateOr($proposition->conditions());
-        if ($proposition->atLeast() == count($proposition->conditions()) && count($proposition->conditions()) <= $proposition->atMost())
-            return $this->generateAnd($proposition->conditions());
+        if ($proposition->atLeast() == 1 && count($proposition->expressions()) <= $proposition->atMost())
+            return $this->generateOr($proposition->expressions());
+        if ($proposition->atLeast() == count($proposition->expressions()) && count($proposition->expressions()) <= $proposition->atMost())
+            return $this->generateAnd($proposition->expressions());
         if ($proposition->atMost() == 0 && $proposition->atLeast() <= 0)
-            return $this->generateNot($proposition->conditions());
+            return $this->generateNot($proposition->expressions());
 
         return $this->generate($proposition);
     }
@@ -74,14 +74,14 @@ class PropositionToCallback
         };
     }
 
-    private function generate(Proposition $prop)
+    private function generate(AndProposition $prop)
     {
         return function($x) use($prop)
         {
-            $remaining = count($prop->conditions());
+            $remaining = count($prop->expressions());
             $matched = 0;
 
-            foreach($prop->conditions() as $condition) {
+            foreach($prop->expressions() as $condition) {
                 if ($matched + $remaining < $prop->atLeast())
                     return false;
                 if ($matched >= $prop->atLeast() && $matched + $remaining <= $prop->atMost())

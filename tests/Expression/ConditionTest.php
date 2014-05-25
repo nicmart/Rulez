@@ -8,20 +8,20 @@
  * @author Nicolò Martini <nicmartnic@gmail.com>
  */
 
-namespace NicMart\Rulez\Test\Condition;
+namespace NicMart\Rulez\Test\Expression;
 
 
-use NicMart\Rulez\Condition\Condition;
+use NicMart\Rulez\Expression\Condition;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class ConditionTest extends \PHPUnit_Framework_TestCase
 {
-    function testResolveToCallback()
+    function testPredicate()
     {
-        $condition = new Condition("foo", "bar");
         $collection = new MapsCollection;
+        $condition = new Condition("foo", "bar", $collection);
 
-        $callback = $condition->resolveToCallback($collection);
+        $callback = $condition->predicate();
 
         $this->setExpectedException("\\OutOfBoundsException");
         $callback("bar");

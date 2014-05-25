@@ -8,25 +8,34 @@
  * @author Nicolò Martini <nicmartnic@gmail.com>
  */
 
-namespace NicMart\Rulez\Condition;
+namespace NicMart\Rulez\Expression;
 
 
 use NicMart\Rulez\Maps\MapsCollection;
 
-class Condition
+/**
+ * Class Condition
+ *
+ * @package NicMart\Rulez\Expression
+ */
+class Condition implements Expression
 {
     private $mapName;
 
     private $value;
 
+    private $mapsCollection;
+
     /**
      * @param string    $mapName
      * @param mixed     $value
+     * @param MapsCollection $mapsCollection
      */
-    function __construct($mapName, $value)
+    function __construct($mapName, $value, MapsCollection $mapsCollection)
     {
         $this->mapName = $mapName;
         $this->value = $value;
+        $this->mapsCollection = $mapsCollection;
     }
 
     /**
@@ -50,20 +59,15 @@ class Condition
     }
 
     /**
-     * @param MapsCollection $collection
-     *
      * @return callable
-     *
-     * @throws \OutOfBoundsException
      */
-    public function resolveToCallback(MapsCollection $collection)
+    function predicate()
     {
-        return function($x) use($collection)
+        return function($x)
         {
-            if (!isset($collection[$this->mapName]))
-                throw new \OutOfBoundsException("There is no map registered with name {$this->mapName}");
-
-            return $collection[$this->mapName]($x) === $this->value;
+            if (!isset($this->mapsCollection[$this->getMapName()]))
+                throw new \OutOfBoundsException("No map defined with that name");
+            return $this->mapsCollection[$this->getMapName()]($x) == $this->getValue();
         };
     }
 }

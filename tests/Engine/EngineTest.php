@@ -11,8 +11,8 @@
 namespace NicMart\Rulez\Test\Engine;
 
 
-use NicMart\Rulez\Condition\Condition;
-use NicMart\Rulez\Condition\Proposition;
+use NicMart\Rulez\Expression\Condition;
+use NicMart\Rulez\Expression\AndProposition;
 use NicMart\Rulez\Engine\Engine;
 use NicMart\Rulez\Engine\Rule;
 use NicMart\Rulez\Engine\ScanEngine;
@@ -37,31 +37,31 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         $engine = new Engine($collection);
         $scanEngine = new ScanEngine($collection);
 
-        $prop1 = (new Proposition(1))
-            ->addCondition(new Condition("%3", 0))
-            ->addCondition(new Condition("%5", 0))
+        $prop1 = (new AndProposition(1))
+            ->addExpression(new Condition("%3", 0))
+            ->addExpression(new Condition("%5", 0))
         ;
 
-        $prop2 = (new Proposition(2, 2))
-            ->addCondition(new Condition("%3", 0))
-            ->addCondition(new Condition("%5", 0))
+        $prop2 = (new AndProposition(2, 2))
+            ->addExpression(new Condition("%3", 0))
+            ->addExpression(new Condition("%5", 0))
         ;
-        $prop3 = (new Proposition(1))
-            ->addCondition(new Condition("=", 10))
-            ->addCondition(new Condition("=", 11))
-            ->addCondition(new Condition("=", 12))
-            ->addCondition(new Condition("=", 13))
-            ->addCondition(new Condition("=", 14))
-        ;
-
-        $prop4 = (new Proposition(0, 0))
-            ->addCondition(new Condition("%3", 0))
-            ->addCondition(new Condition("%5", 0))
-            ->addCondition(new Condition("%5", 1))
+        $prop3 = (new AndProposition(1))
+            ->addExpression(new Condition("=", 10))
+            ->addExpression(new Condition("=", 11))
+            ->addExpression(new Condition("=", 12))
+            ->addExpression(new Condition("=", 13))
+            ->addExpression(new Condition("=", 14))
         ;
 
-        $prop5 = (new Proposition(1))
-            ->addCondition(new Condition(">50", true))
+        $prop4 = (new AndProposition(0, 0))
+            ->addExpression(new Condition("%3", 0))
+            ->addExpression(new Condition("%5", 0))
+            ->addExpression(new Condition("%5", 1))
+        ;
+
+        $prop5 = (new AndProposition(1))
+            ->addExpression(new Condition(">50", true))
         ;
 
         $engine

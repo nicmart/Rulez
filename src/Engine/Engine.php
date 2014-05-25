@@ -11,10 +11,10 @@
 namespace NicMart\Rulez\Engine;
 
 
-use NicMart\Rulez\Condition\PositiveOnlyPropositionEvaluation;
-use NicMart\Rulez\Condition\Proposition;
-use NicMart\Rulez\Condition\PropositionEvaluationInterface;
-use NicMart\Rulez\Condition\PropositionEvaluation;
+use NicMart\Rulez\Expression\PositiveOnlyPropositionEvaluation;
+use NicMart\Rulez\Expression\AndProposition;
+use NicMart\Rulez\Expression\PropositionEvaluationInterface;
+use NicMart\Rulez\Expression\PropositionEvaluation;
 use NicMart\Rulez\Maps\MapsCollection;
 
 class Engine implements EngineInterface
@@ -77,7 +77,7 @@ class Engine implements EngineInterface
         $eval = $this->createEvaluationFromRule($rule);
         $this->propositionsEvals->attach($eval);
 
-        foreach ($rule->proposition()->conditions() as $condition) {
+        foreach ($rule->proposition()->expressions() as $condition) {
             $mapName = $condition->getMapName();
 
             if (!isset($this->activeMaps[$mapName]))
@@ -156,7 +156,7 @@ class Engine implements EngineInterface
             $this->ruleResolved($state, $rule, $eval);
         };
 
-        if ($proposition->atLeast() > 0 && count($proposition->conditions()) <= $proposition->atMost()) {
+        if ($proposition->atLeast() > 0 && count($proposition->expressions()) <= $proposition->atMost()) {
             return new PositiveOnlyPropositionEvaluation($proposition->atLeast(), $callback);
         }
 

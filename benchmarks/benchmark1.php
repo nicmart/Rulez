@@ -12,8 +12,8 @@ include '../vendor/autoload.php';
 ini_set('xdebug.var_display_max_depth', '10');
 ini_set('max_execution_time', '120');
 
-use NicMart\Rulez\Condition\Proposition;
-use NicMart\Rulez\Condition\Condition;
+use NicMart\Rulez\Expression\AndProposition;
+use NicMart\Rulez\Expression\Condition;
 use NicMart\Rulez\Engine\Rule;
 use NicMart\Rulez\Engine\Engine;
 use NicMart\Rulez\Engine\EngineInterface;
@@ -66,13 +66,13 @@ function engine($class, MapsCollection $collection, $propositions)
 
 function prop($numOfMaps, $numConditions, $atLeast, $atMost = INF)
 {
-    $prop = new Proposition($atLeast, $atMost);
+    $prop = new AndProposition($atLeast, $atMost);
 
     for ($i = 0; $i < $numConditions; $i++) {
         $mapName = (string) rand(0, $numOfMaps - 1);
         $condValue = (string) rand(0, 9);
 
-        $prop->addCondition(new Condition($mapName, $condValue));
+        $prop->addExpression(new Condition($mapName, $condValue));
     }
 
     return $prop;
@@ -142,9 +142,9 @@ function addPropsToEngine(EngineInterface $engine, array $props)
 
 /*$groups[] = benchmark(
     collection(3), [
-        (new Proposition(1))
-            ->addCondition(new Condition("0", "s"))
-            //->addCondition(new Condition("0", "a"))
+        (new AndProposition(1))
+            ->addExpression(new Condition("0", "s"))
+            //->addExpression(new Condition("0", "a"))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
@@ -153,8 +153,8 @@ function addPropsToEngine(EngineInterface $engine, array $props)
 
 $groups[] = benchmark(
     collection(3), [
-        (new Proposition(1))
-            ->addCondition(new Condition("0", "b"))
+        (new AndProposition(1))
+            ->addExpression(new Condition("0", "b"))
     ],
     [5000],
     "asdasdasdasdasdasdasdasdasdasdasd",
@@ -162,8 +162,8 @@ $groups[] = benchmark(
 );
 
 $clonedPropositions = [];
-$p = (new Proposition(1))
-        ->addCondition(new Condition("0", "b"));
+$p = (new AndProposition(1))
+        ->addExpression(new Condition("0", "b"));
 for ($i = 0; $i < 400; $i++) {
     $clonedPropositions[] = $p;
 }
@@ -177,203 +177,203 @@ $groups[] = benchmark(
 
 $groups[] = benchmark(
     collection(3), [
-        (new Proposition(1))
-            ->addCondition(new Condition("0", "x"))
-            ->addCondition(new Condition("0", "y"))
-            ->addCondition(new Condition("0", "z"))
-            ->addCondition(new Condition("0", "u"))
-            ->addCondition(new Condition("0", "m"))
-            ->addCondition(new Condition("0", "n"))
-            ->addCondition(new Condition("1", "a"))
-            ->addCondition(new Condition("1", "b"))
-            ->addCondition(new Condition("1", "v"))
-            ->addCondition(new Condition("1", "c"))
-            ->addCondition(new Condition("2", "a"))
-            ->addCondition(new Condition("2", "b"))
-            ->addCondition(new Condition("2", "c"))
-            ->addCondition(new Condition("2", "m"))
-            ->addCondition(new Condition("0", "a"))
+        (new AndProposition(1))
+            ->addExpression(new Condition("0", "x"))
+            ->addExpression(new Condition("0", "y"))
+            ->addExpression(new Condition("0", "z"))
+            ->addExpression(new Condition("0", "u"))
+            ->addExpression(new Condition("0", "m"))
+            ->addExpression(new Condition("0", "n"))
+            ->addExpression(new Condition("1", "a"))
+            ->addExpression(new Condition("1", "b"))
+            ->addExpression(new Condition("1", "v"))
+            ->addExpression(new Condition("1", "c"))
+            ->addExpression(new Condition("2", "a"))
+            ->addExpression(new Condition("2", "b"))
+            ->addExpression(new Condition("2", "c"))
+            ->addExpression(new Condition("2", "m"))
+            ->addExpression(new Condition("0", "a"))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
-    "Single OR Proposition"
+    "Single OR AndProposition"
 );
 
 $groups[] = benchmark(
     collection(10), [
-        (new Proposition(3, 3))
-            ->addCondition(new Condition("0", "a"))
-            ->addCondition(new Condition("1", "s"))
-            ->addCondition(new Condition("2", "d"))
+        (new AndProposition(3, 3))
+            ->addExpression(new Condition("0", "a"))
+            ->addExpression(new Condition("1", "s"))
+            ->addExpression(new Condition("2", "d"))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
-    "Single AND Proposition"
+    "Single AND AndProposition"
 );
 
 /*$groups[] = benchmark(
     $collection,
-    [(new Proposition(1))
-        ->addCondition(new Condition("0", "a"))
-        ->addCondition(new Condition("0", "b"))
-        ->addCondition(new Condition("0", "c"))
-        ->addCondition(new Condition("2", "a"))
-        ->addCondition(new Condition("2", "s")),
-    (new Proposition(5, 5))
-        ->addCondition(new Condition("0", "a"))
-        ->addCondition(new Condition("0", "b"))
-        ->addCondition(new Condition("0", "c"))
-        ->addCondition(new Condition("2", "a"))
-        ->addCondition(new Condition("2", "s"))
+    [(new AndProposition(1))
+        ->addExpression(new Condition("0", "a"))
+        ->addExpression(new Condition("0", "b"))
+        ->addExpression(new Condition("0", "c"))
+        ->addExpression(new Condition("2", "a"))
+        ->addExpression(new Condition("2", "s")),
+    (new AndProposition(5, 5))
+        ->addExpression(new Condition("0", "a"))
+        ->addExpression(new Condition("0", "b"))
+        ->addExpression(new Condition("0", "c"))
+        ->addExpression(new Condition("2", "a"))
+        ->addExpression(new Condition("2", "s"))
     ],
     [1000, 10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
-    "Single prop, 5 conditions, 2 maps"
+    "Single prop, 5 expressions, 2 maps"
 );*/
 
 /*$groups[] = benchmark(
     $collection,
-    [(new Proposition(1))
-        ->addCondition(new Condition("0", "3"))
-        ->addCondition(new Condition("0", "2"))
-        ->addCondition(new Condition("0", "1"))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("2", "1"))
-        ->addCondition(new Condition("2", "2")),
-    (new Proposition(0, 0))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("4", "0")),
-    (new Proposition(5, 5))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "4")),
-    (new Proposition(2, 3))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "4"))
+    [(new AndProposition(1))
+        ->addExpression(new Condition("0", "3"))
+        ->addExpression(new Condition("0", "2"))
+        ->addExpression(new Condition("0", "1"))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("2", "1"))
+        ->addExpression(new Condition("2", "2")),
+    (new AndProposition(0, 0))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("4", "0")),
+    (new AndProposition(5, 5))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "4")),
+    (new AndProposition(2, 3))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "4"))
     ],
 
     [1000, 10000],
     "01234567890123456789",
-    "Single prop, 5 conditions, 2 maps"
+    "Single prop, 5 expressions, 2 maps"
 );*/
 
 /*$groups[] = benchmark(
     collection(20),
-    [(new Proposition(1))
-        ->addCondition(new Condition("0", "3"))
-        ->addCondition(new Condition("0", "2"))
-        ->addCondition(new Condition("0", "1"))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("2", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("6", "6"))
-        ->addCondition(new Condition("7", "3")),
-    (new Proposition(0, 0))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("4", "3"))
-        ->addCondition(new Condition("5", "3"))
-        ->addCondition(new Condition("6", "3"))
-        ->addCondition(new Condition("7", "3"))
-        ->addCondition(new Condition("7", "7"))
-        ->addCondition(new Condition("7", "83"))
-        ->addCondition(new Condition("7", "Q"))
-        ->addCondition(new Condition("7", "3"))
-        ->addCondition(new Condition("7", "2"))
-        ->addCondition(new Condition("4", "0")),
-    (new Proposition(11, 11))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("3", "5"))
-        ->addCondition(new Condition("3", "1"))
-        ->addCondition(new Condition("3", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("5", "5"))
-        ->addCondition(new Condition("5", "6")),
-    (new Proposition(1, 2))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("3", "5"))
-        ->addCondition(new Condition("3", "1"))
-        ->addCondition(new Condition("3", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("5", "5"))
-        ->addCondition(new Condition("5", "6")),
-    (new Proposition(1))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("3", "5"))
-        ->addCondition(new Condition("3", "1"))
-        ->addCondition(new Condition("3", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("5", "5"))
-        ->addCondition(new Condition("5", "6")),
-    (new Proposition(2, 3))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "4")),
-    (new Proposition(10, 10))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("4", "4"))
-        ->addCondition(new Condition("5", "5"))
-        ->addCondition(new Condition("6", "6"))
-        ->addCondition(new Condition("7", "7"))
-        ->addCondition(new Condition("8", "8"))
-        ->addCondition(new Condition("9", "9")),
-    (new Proposition(11, 11))
-        ->addCondition(new Condition("0", "0"))
-        ->addCondition(new Condition("1", "1"))
-        ->addCondition(new Condition("2", "2"))
-        ->addCondition(new Condition("3", "3"))
-        ->addCondition(new Condition("4", "4"))
-        ->addCondition(new Condition("5", "5"))
-        ->addCondition(new Condition("6", "6"))
-        ->addCondition(new Condition("7", "7"))
-        ->addCondition(new Condition("8", "8"))
-        ->addCondition(new Condition("9", "9"))
-        ->addCondition(new Condition("0", "1"))
-        ->addCondition(new Condition("10", "0")),
-    (new Proposition(1))
-        ->addCondition(new Condition("0", "1"))
-        ->addCondition(new Condition("1", "2"))
-        ->addCondition(new Condition("2", "3"))
-        ->addCondition(new Condition("3", "4"))
-        ->addCondition(new Condition("4", "5"))
-        ->addCondition(new Condition("5", "6"))
-        ->addCondition(new Condition("6", "7"))
-        ->addCondition(new Condition("7", "7"))
-        ->addCondition(new Condition("8", "8"))
-        ->addCondition(new Condition("9", "9"))
-        ->addCondition(new Condition("0", "1"))
-        ->addCondition(new Condition("10", "0")),
+    [(new AndProposition(1))
+        ->addExpression(new Condition("0", "3"))
+        ->addExpression(new Condition("0", "2"))
+        ->addExpression(new Condition("0", "1"))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("2", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("6", "6"))
+        ->addExpression(new Condition("7", "3")),
+    (new AndProposition(0, 0))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("4", "3"))
+        ->addExpression(new Condition("5", "3"))
+        ->addExpression(new Condition("6", "3"))
+        ->addExpression(new Condition("7", "3"))
+        ->addExpression(new Condition("7", "7"))
+        ->addExpression(new Condition("7", "83"))
+        ->addExpression(new Condition("7", "Q"))
+        ->addExpression(new Condition("7", "3"))
+        ->addExpression(new Condition("7", "2"))
+        ->addExpression(new Condition("4", "0")),
+    (new AndProposition(11, 11))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("3", "5"))
+        ->addExpression(new Condition("3", "1"))
+        ->addExpression(new Condition("3", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("5", "5"))
+        ->addExpression(new Condition("5", "6")),
+    (new AndProposition(1, 2))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("3", "5"))
+        ->addExpression(new Condition("3", "1"))
+        ->addExpression(new Condition("3", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("5", "5"))
+        ->addExpression(new Condition("5", "6")),
+    (new AndProposition(1))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("3", "5"))
+        ->addExpression(new Condition("3", "1"))
+        ->addExpression(new Condition("3", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("5", "5"))
+        ->addExpression(new Condition("5", "6")),
+    (new AndProposition(2, 3))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "4")),
+    (new AndProposition(10, 10))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("4", "4"))
+        ->addExpression(new Condition("5", "5"))
+        ->addExpression(new Condition("6", "6"))
+        ->addExpression(new Condition("7", "7"))
+        ->addExpression(new Condition("8", "8"))
+        ->addExpression(new Condition("9", "9")),
+    (new AndProposition(11, 11))
+        ->addExpression(new Condition("0", "0"))
+        ->addExpression(new Condition("1", "1"))
+        ->addExpression(new Condition("2", "2"))
+        ->addExpression(new Condition("3", "3"))
+        ->addExpression(new Condition("4", "4"))
+        ->addExpression(new Condition("5", "5"))
+        ->addExpression(new Condition("6", "6"))
+        ->addExpression(new Condition("7", "7"))
+        ->addExpression(new Condition("8", "8"))
+        ->addExpression(new Condition("9", "9"))
+        ->addExpression(new Condition("0", "1"))
+        ->addExpression(new Condition("10", "0")),
+    (new AndProposition(1))
+        ->addExpression(new Condition("0", "1"))
+        ->addExpression(new Condition("1", "2"))
+        ->addExpression(new Condition("2", "3"))
+        ->addExpression(new Condition("3", "4"))
+        ->addExpression(new Condition("4", "5"))
+        ->addExpression(new Condition("5", "6"))
+        ->addExpression(new Condition("6", "7"))
+        ->addExpression(new Condition("7", "7"))
+        ->addExpression(new Condition("8", "8"))
+        ->addExpression(new Condition("9", "9"))
+        ->addExpression(new Condition("0", "1"))
+        ->addExpression(new Condition("10", "0")),
     ],
 
     [1000, 10000],
     "01234567890123456789",
-    "Single prop, 5 conditions, 2 maps"
+    "Single prop, 5 expressions, 2 maps"
 );*/
 
 $groups[] = benchmark(
@@ -382,7 +382,7 @@ $groups[] = benchmark(
 
     [1000, 10000],
     "01234567890123456789120893710928370198237918237981273873872873",
-    "Random conditions"
+    "Random expressions"
 );
 
 $groups[] = benchmark(
@@ -391,7 +391,7 @@ $groups[] = benchmark(
 
     [1000, 10000],
     "01234567890123456789120893710928370198237918237981273873872873",
-    "Random conditions"
+    "Random expressions"
 );
 
 $groups[] = benchmark(
@@ -400,7 +400,7 @@ $groups[] = benchmark(
 
     [1000],
     "01234567890123456789120893710928370198237918237981273873872873",
-    "Random conditions"
+    "Random expressions"
 );
 
 /*$bench = new \Nicmart\Benchmark\VariabeSizeEngine('NumberOfMaps');

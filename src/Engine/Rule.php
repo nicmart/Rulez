@@ -11,12 +11,12 @@
 namespace NicMart\Rulez\Engine;
 
 
-use NicMart\Rulez\Condition\Proposition;
+use NicMart\Rulez\Expression\AndProposition;
 
 class Rule
 {
     /**
-     * @var Proposition
+     * @var AndProposition
      */
     private $proposition;
 
@@ -26,10 +26,10 @@ class Rule
     private $production;
 
     /**
-     * @param Proposition $proposition
+     * @param AndProposition $proposition
      * @param callable $production
      */
-    function __construct(Proposition $proposition, $production)
+    function __construct(AndProposition $proposition, $production)
     {
         $this->proposition = $proposition;
         $this->production = $production;
@@ -46,9 +46,9 @@ class Rule
     }
 
     /**
-     * Get Proposition
+     * Get AndProposition
      *
-     * @return \NicMart\Rulez\Condition\Proposition
+     * @return \NicMart\Rulez\Expression\AndProposition
      */
     public function proposition()
     {
