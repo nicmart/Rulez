@@ -119,8 +119,15 @@ class Engine implements EngineInterface
             return $this->createAndIndexEvaluation(new AndProposition([$expression]), $callback);
 
         $atLeast = $expression instanceof OrProposition ? 1 : count($expression->expressions());
-        $eval = new PositivePropositionEvaluation($atLeast, $callback);
-        $this->propositionsEvals[$this->propositionHash($expression)] = $eval;
+
+        $hash = $this->propositionHash($expression);
+        $eval = isset($this->propositionsEvals[$hash])
+            ? $this->propositionsEvals[$hash]
+            : $this->propositionsEvals[$hash] = new PositivePropositionEvaluation($atLeast)
+        ;
+
+        if ($callback)
+            $eval->onResolved($callback);
 
         foreach ($expression->expressions() as $subExpression) {
             if ($subExpression instanceof Condition) {

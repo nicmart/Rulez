@@ -98,6 +98,9 @@ trait PropositionEvaluationTrait
     {
         $this->resolvedStatus = $resolvedStatus;
 
+        if ($this->children()) {
+            $a = "a";
+        }
         foreach ($this->children() as $subEval)
             $subEval->input($resolvedStatus);
 

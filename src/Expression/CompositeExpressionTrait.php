@@ -35,8 +35,8 @@ trait CompositeExpressionTrait
      */
     function addExpressions(array $expressions)
     {
-        foreach ($expressions as $condition)
-            $this->addExpression($condition);
+        foreach ($expressions as $expression)
+            $this->addExpression($expression);
 
         return $this;
     }

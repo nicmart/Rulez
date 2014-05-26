@@ -223,7 +223,7 @@ $groups[] = benchmark(
 );*/
 
 /*$groups[] = benchmark(
-    $collection,
+    $collection = collection(3),
     [(new OrProposition)
         ->addExpression(new Condition("0", "a", $collection))
         ->addExpression(new Condition("0", "b", $collection))
@@ -395,9 +395,9 @@ $groups[] = benchmark(
     "01234567890123456789120893710928370198237918237981273873872873",
     "Random expressions"
 );*/
-/*
-$groups[] = benchmark(
-    $collection = collection(20),
+
+/*$groups[] = benchmark(
+    $collection = collection(100),
     [prop($collection, 10, 1), prop($collection, 5, 5, 5), prop($collection, 20, 1), prop($collection, 3, 0, 0), prop($collection, 15, 1), prop($collection, 20, 5), prop($collection, 50, 1), prop($collection, 50, 1), prop($collection, 50, 1), prop($collection, 100, 1)],
 
     [1000, 10000],
@@ -431,7 +431,7 @@ $bench
     ->registerFunctional('smart', 'SmartEngine', generateNumberOfPropositionProgression(Engine::class), true)
 ;
 
-$bench->progression(10000, 8, 2, 100);
+$bench->progression(1000, 8, 5, 2);
 
 $groups[] = $bench->getResults();
 

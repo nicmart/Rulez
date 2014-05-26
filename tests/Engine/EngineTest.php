@@ -65,12 +65,22 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->addExpression(new Condition(">50", true, $collection))
         ;
 
+        $propCompositeOr = new OrProposition([
+            $prop1, $prop4
+        ]);
+
+        $propCompositeAnd = new AndProposition([
+            $prop1, $prop4
+        ]);
+
         $engine
             ->addRule(new Rule($prop1, "Mod 3 o 5"))
             ->addRule(new Rule($prop2, "Mod 15"))
             ->addRule(new Rule($prop3, "10-14"))
             ->addRule(new Rule($prop4, "7k +1,2,3"))
             ->addRule(new Rule($prop5, "Greater than 50"))
+            ->addRule(new Rule($propCompositeOr, "Mod 3 or Mod 5 or 7k +1,2,3"))
+            ->addRule(new Rule($propCompositeAnd, "Mod 3 or Mod 5 AND 7k+1,2,3"))
         ;
         $scanEngine
             ->addRule(new Rule($prop1, "Mod 3 o 5"))
@@ -78,6 +88,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->addRule(new Rule($prop3, "10-14"))
             ->addRule(new Rule($prop4, "7k +1,2,3"))
             ->addRule(new Rule($prop5, "Greater than 50"))
+            ->addRule(new Rule($propCompositeOr, "Mod 3 or Mod 5 or 7k +1,2,3"))
+            ->addRule(new Rule($propCompositeAnd, "Mod 3 or Mod 5 AND 7k+1,2,3"))
         ;
 
         $n = rand(0, 100);
