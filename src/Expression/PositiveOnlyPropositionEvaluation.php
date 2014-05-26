@@ -10,8 +10,12 @@
 
 namespace NicMart\Rulez\Expression;
 
-
-class PositiveOnlyPropositionEvaluation implements PropositionEvaluationInterface
+/**
+ * Class PositiveOnlyPropositionEvaluation
+ *
+ * @package NicMart\Rulez\Expression
+ */
+class PositiveOnlyPropositionEvaluation implements PropositionEvaluation
 {
     use PropositionEvaluationTrait;
 
@@ -39,7 +43,7 @@ class PositiveOnlyPropositionEvaluation implements PropositionEvaluationInterfac
     /**
      * {@inheritdoc}
      */
-    function signalMatch()
+    function input()
     {
         if (++$this->matchCount >= $this->atLeast)
             $this->resolve(true);

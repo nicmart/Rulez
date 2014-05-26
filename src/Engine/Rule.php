@@ -11,27 +11,31 @@
 namespace NicMart\Rulez\Engine;
 
 
-use NicMart\Rulez\Expression\AndProposition;
+use NicMart\Rulez\Expression\Expression;
 
+/**
+ * Class Rule
+ * @package NicMart\Rulez\Engine
+ */
 class Rule
 {
     /**
-     * @var AndProposition
+     * @var Expression
      */
-    private $proposition;
+    private $expression;
 
     /**
-     * @var
+     * @var mixed
      */
     private $production;
 
     /**
-     * @param AndProposition $proposition
+     * @param Expression $expression
      * @param callable $production
      */
-    function __construct(AndProposition $proposition, $production)
+    function __construct(Expression $expression, $production)
     {
-        $this->proposition = $proposition;
+        $this->expression = $expression;
         $this->production = $production;
     }
 
@@ -46,12 +50,12 @@ class Rule
     }
 
     /**
-     * Get AndProposition
+     * Get Expression
      *
-     * @return \NicMart\Rulez\Expression\AndProposition
+     * @return Expression
      */
-    public function proposition()
+    public function expression()
     {
-        return $this->proposition;
+        return $this->expression;
     }
 }

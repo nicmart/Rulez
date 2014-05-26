@@ -39,7 +39,6 @@ class ScanEngine implements EngineInterface
     function setMapsCollection(MapsCollection $maps)
     {
         $this->mapsCollection = $maps;
-        $this->propositionToCallback = new PropositionToCallback($maps);
 
         return $this;
     }
@@ -50,7 +49,7 @@ class ScanEngine implements EngineInterface
     function addRule(Rule $rule)
     {
         $this->callbacksToProductions[] = [
-            $this->propositionToCallback->getCallback($rule->proposition()),
+            $rule->expression()->predicate(),
             $rule
         ];
 
