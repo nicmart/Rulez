@@ -15,22 +15,12 @@ class PositivePropositionEvaluation implements PropositionEvaluation
     use PropositionEvaluationTrait;
 
     /**
-     * @var int
-     */
-    private $atLeast;
-
-    /**
-     * @var int
-     */
-    private $matched = 0;
-
-    /**
      * @param $atLeast
      * @param callable $resolveCallback
      */
     function __construct($atLeast, $resolveCallback = null)
     {
-        $this->atLeast = $atLeast;
+        $this->limit = $atLeast;
 
         if ($resolveCallback)
             $this->onResolved($resolveCallback);
@@ -42,25 +32,11 @@ class PositivePropositionEvaluation implements PropositionEvaluation
     function input($value)
     {
         if ($value) {
-            $this->matched++;
+            $this->positiveInputCounter++;
 
-            if ($this->matched >= $this->atLeast)
+            if ($this->positiveInputCounter >= $this->limit)
                 $this->resolve(true);
         }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    function reset()
-    {
-        $this->matched = 0;
-        $this->resolvedStatus = null;
-
-        foreach ($this->children() as $child)
-            $child->reset();
 
         return $this;
     }

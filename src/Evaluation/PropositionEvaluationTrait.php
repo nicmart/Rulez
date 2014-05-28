@@ -16,6 +16,18 @@ namespace NicMart\Rulez\Evaluation;
  */
 trait PropositionEvaluationTrait
 {
+
+    /**
+     * @var int
+     */
+    private $limit;
+
+
+    /**
+     * @var int
+     */
+    private $positiveInputCounter = 0;
+
     /**
      * @var null|bool
      */
@@ -89,6 +101,21 @@ trait PropositionEvaluationTrait
         return $this;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    function reset()
+    {
+        $this->positiveInputCounter = 0;
+        $this->resolvedStatus = null;
+
+        foreach ($this->children() as $child)
+            $child->reset();
+
+        return $this;
+    }
+
     /**
      * @param bool $resolvedStatus
      *
@@ -98,9 +125,6 @@ trait PropositionEvaluationTrait
     {
         $this->resolvedStatus = $resolvedStatus;
 
-        if ($this->children()) {
-            $a = "a";
-        }
         foreach ($this->children() as $subEval)
             $subEval->input($resolvedStatus);
 
