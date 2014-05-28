@@ -62,4 +62,11 @@ interface PropositionEvaluation
      * @return $this
      */
     function addChildren(array $evaluations);
+
+    /**
+     * @param bool $resolvedStatus
+     *
+     * @return $this
+     */
+    function resolve($resolvedStatus);
 }

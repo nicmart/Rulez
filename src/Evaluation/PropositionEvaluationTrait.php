@@ -121,7 +121,7 @@ trait PropositionEvaluationTrait
      *
      * @return $this
      */
-    private function resolve($resolvedStatus)
+    function resolve($resolvedStatus)
     {
         $this->resolvedStatus = $resolvedStatus;
 

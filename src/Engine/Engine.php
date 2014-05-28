@@ -11,12 +11,14 @@
 namespace NicMart\Rulez\Engine;
 
 
+use NicMart\Rulez\Evaluation\NegativePropositionEvaluation;
 use NicMart\Rulez\Evaluation\PositivePropositionEvaluation;
 use NicMart\Rulez\Evaluation\PropositionEvaluation;
 use NicMart\Rulez\Expression\AndProposition;
 use NicMart\Rulez\Expression\CompositeExpression;
 use NicMart\Rulez\Expression\Condition;
 use NicMart\Rulez\Expression\Expression;
+use NicMart\Rulez\Expression\NotProposition;
 use NicMart\Rulez\Expression\OrProposition;
 use NicMart\Rulez\Maps\MapsCollection;
 
@@ -46,6 +48,8 @@ class Engine implements EngineInterface
      * @var \SplObjectStorage
      */
     private $matches;
+
+    private $negativeEvaluationIndex = [];
 
     /**
      * @param MapsCollection $maps
@@ -95,6 +99,13 @@ class Engine implements EngineInterface
             }
         }
 
+        foreach($this->negativeEvaluationIndex as $evaluations) {
+            foreach ($evaluations as $evaluation) {
+                if(!$evaluation->isResolved())
+                    $evaluation->resolve(true);
+            }
+        }
+
         $matches = $this->matches;
 
         $this->reset();
@@ -113,21 +124,22 @@ class Engine implements EngineInterface
             $this->matches->attach($rule);
     }
 
-    private function createAndIndexEvaluation(Expression $expression, $callback = null)
+    private function createAndIndexEvaluation(Expression $expression, $callback = null, &$negativeLevel = 0)
     {
         if (!$expression instanceof CompositeExpression)
             return $this->createAndIndexEvaluation(new AndProposition([$expression]), $callback);
 
-        $atLeast = $expression instanceof OrProposition ? 1 : count($expression->expressions());
-
         $hash = $this->propositionHash($expression);
+
         $eval = isset($this->propositionsEvals[$hash])
             ? $this->propositionsEvals[$hash]
-            : $this->propositionsEvals[$hash] = new PositivePropositionEvaluation($atLeast)
+            : $this->propositionsEvals[$hash] = $this->evaluationFromProposition($expression)
         ;
 
         if ($callback)
             $eval->onResolved($callback);
+
+        $maxNegativeLevelOfChildren = 0;
 
         foreach ($expression->expressions() as $subExpression) {
             if ($subExpression instanceof Condition) {
@@ -136,12 +148,35 @@ class Engine implements EngineInterface
                 $this->mapsValuesToEvals[$mapName][$mapValue][$this->propositionHash($expression)] = $eval;
                 $this->activeMaps[$mapName] = $this->maps[$mapName];
             } else {
-                $subEval = $this->createAndIndexEvaluation($subExpression);
+                $childLevel = 0;
+                $subEval = $this->createAndIndexEvaluation($subExpression, $childLevel);
                 $subEval->addChild($eval);
+                if ($childLevel > $maxNegativeLevelOfChildren)
+                    $maxNegativeLevelOfChildren = $childLevel;
             }
         }
 
+        $negativeLevel = 0;
+
+        if ($eval instanceof NegativePropositionEvaluation) {
+            $negativeLevel = 1 + $maxNegativeLevelOfChildren;
+            $this->negativeEvaluationIndex[$negativeLevel][] = $eval;
+        }
+
         return $eval;
+    }
+
+    private function evaluationFromProposition(CompositeExpression $expression)
+    {
+        if ($expression instanceof OrProposition) {
+            return new PositivePropositionEvaluation(1);
+        } elseif ($expression instanceof AndProposition) {
+            return new PositivePropositionEvaluation(count($expression->expressions()));
+        } elseif ($expression instanceof NotProposition) {
+            return new NegativePropositionEvaluation(0);
+        }
+
+        throw new Exception("Invalid expression type");
     }
 
     private function callbackForRule(Rule $rule)

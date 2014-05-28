@@ -16,6 +16,7 @@ use NicMart\Rulez\Expression\AndProposition;
 use NicMart\Rulez\Engine\Engine;
 use NicMart\Rulez\Engine\Rule;
 use NicMart\Rulez\Engine\ScanEngine;
+use NicMart\Rulez\Expression\NotProposition;
 use NicMart\Rulez\Maps\MapsCollection;
 use NicMart\Rulez\Expression\OrProposition;
 
@@ -65,6 +66,17 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->addExpression(new Condition(">50", true, $collection))
         ;
 
+        $prop6 = (new NotProposition)
+            ->addExpression(new Condition("%7", 1, $collection))
+            ->addExpression(new Condition("%7", 2, $collection))
+            ->addExpression(new Condition("%7", 3, $collection))
+        ;
+
+        $propNotCombined = (new NotProposition)
+            ->addExpression($prop6)
+            ->addExpression(new Condition("%5", 0, $collection))
+        ;
+
         $propCompositeOr = new OrProposition([
             $prop1, $prop4
         ]);
@@ -81,6 +93,8 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->addRule(new Rule($prop5, "Greater than 50"))
             ->addRule(new Rule($propCompositeOr, "Mod 3 or Mod 5 or 7k +1,2,3"))
             ->addRule(new Rule($propCompositeAnd, "Mod 3 or Mod 5 AND 7k+1,2,3"))
+            ->addRule(new Rule($prop6, "NOT 7k+1,2,3"))
+            ->addRule(new Rule($propNotCombined, "7k+1,2,3 DOUBLE NOT"))
         ;
         $scanEngine
             ->addRule(new Rule($prop1, "Mod 3 o 5"))
@@ -90,10 +104,12 @@ class EngineTest extends \PHPUnit_Framework_TestCase
             ->addRule(new Rule($prop5, "Greater than 50"))
             ->addRule(new Rule($propCompositeOr, "Mod 3 or Mod 5 or 7k +1,2,3"))
             ->addRule(new Rule($propCompositeAnd, "Mod 3 or Mod 5 AND 7k+1,2,3"))
+            ->addRule(new Rule($prop6, "NOT 7k+1,2,3"))
+            ->addRule(new Rule($propNotCombined, "7k+1,2,3 DOUBLE NOT"))
         ;
 
         $n = rand(0, 100);
-        //$n = 66;
+
         var_dump($n);
         var_dump($this->toAry($engine->run($n)));
         var_dump($this->toAry($scanEngine->run($n)));
