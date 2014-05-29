@@ -13,6 +13,7 @@ ini_set('xdebug.var_display_max_depth', '10');
 ini_set('max_execution_time', '120');
 
 use NicMart\Rulez\Expression\AndProposition;
+use NicMart\Rulez\Expression\NotProposition;
 use NicMart\Rulez\Expression\OrProposition;
 use NicMart\Rulez\Expression\Condition;
 use NicMart\Rulez\Engine\Rule;
@@ -210,17 +211,45 @@ $groups[] = benchmark(
 );*/
 
 
-/*$groups[] = benchmark(
-    $collection = collection(10), [
+$groups[] = benchmark(
+    $collection = collection(30), [
         (new AndProposition)
-            ->addExpression(new Condition("0", "a", $collection))
+            ->addExpression(new Condition("0", "x", $collection))
             ->addExpression(new Condition("1", "s", $collection))
             ->addExpression(new Condition("2", "d", $collection))
+            ->addExpression(new Condition("3", "d", $collection))
+            ->addExpression(new Condition("4", "d", $collection))
+            ->addExpression(new Condition("5", "d", $collection))
+            ->addExpression(new Condition("6", "d", $collection))
+            ->addExpression(new Condition("7", "d", $collection))
+            ->addExpression(new Condition("8", "d", $collection))
+            ->addExpression(new Condition("9", "d", $collection))
+            ->addExpression(new Condition("10", "d", $collection))
+            ->addExpression(new Condition("11", "f", $collection))
+            ->addExpression(new Condition("12", "f", $collection))
+            ->addExpression(new Condition("13", "f", $collection))
+            ->addExpression(new Condition("14", "f", $collection))
+            ->addExpression(new Condition("15", "f", $collection))
+            ->addExpression(new Condition("16", "f", $collection))
+            ->addExpression(new Condition("17", "f", $collection))
+            ->addExpression(new Condition("18", "f", $collection))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
     "Single AND AndProposition"
-);*/
+);
+
+$groups[] = benchmark(
+    $collection = collection(10), [
+        (new NotProposition)
+            ->addExpression(new Condition("1", "a", $collection))
+            ->addExpression(new Condition("2", "a", $collection))
+            ->addExpression(new Condition("0", "a", $collection))
+    ],
+    [10000],
+    "asdasdasdasdasdasdasdasdasdasdasd",
+    "Single Not AndProposition"
+);
 
 /*$groups[] = benchmark(
     $collection = collection(3),
@@ -343,18 +372,38 @@ $groups[] = benchmark(
         ->addExpression(new Condition("1", "1", $collection))
         ->addExpression(new Condition("2", "2", $collection))
         ->addExpression(new Condition("3", "4", $collection)),
-    (new AndProposition)
+    (new OrProposition)
         ->addExpression(new Condition("0", "0", $collection))
         ->addExpression(new Condition("1", "1", $collection))
-        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression((new NotProposition)
+            ->addExpression(new Condition("0", "4", $collection))
+            ->addExpression(new Condition("1", "5", $collection))
+            ->addExpression(new Condition("2", "6", $collection))
+            ->addExpression(new Condition("3", "3", $collection))
+        )
         ->addExpression(new Condition("3", "3", $collection))
-        ->addExpression(new Condition("4", "4", $collection))
+        ->addExpression((new AndProposition())
+            ->addExpression((new NotProposition)
+                ->addExpression(new Condition("0", "3", $collection))
+                ->addExpression(new Condition("0", "2", $collection))
+            )
+            ->addExpression((new NotProposition)
+                ->addExpression(new Condition("1", "3", $collection))
+                ->addExpression(new Condition("1", "2", $collection))
+            )
+        )
         ->addExpression(new Condition("5", "5", $collection))
+        ->addExpression((new NotProposition)
+            ->addExpression(new Condition("1", "4", $collection))
+            ->addExpression(new Condition("2", "5", $collection))
+            ->addExpression(new Condition("4", "6", $collection))
+            ->addExpression(new Condition("5", "3", $collection))
+        )
         ->addExpression(new Condition("6", "6", $collection))
         ->addExpression(new Condition("7", "7", $collection))
         ->addExpression(new Condition("8", "8", $collection))
         ->addExpression(new Condition("9", "9", $collection)),
-    (new AndProposition)
+    (new NotProposition)
         ->addExpression(new Condition("0", "0", $collection))
         ->addExpression(new Condition("1", "1", $collection))
         ->addExpression(new Condition("2", "2", $collection))
@@ -384,7 +433,140 @@ $groups[] = benchmark(
 
     [1000, 10000],
     "01234567890123456789",
-    "Single prop, 5 expressions, 2 maps"
+    "Nested propositions, with nots"
+);
+
+$groups[] = benchmark(
+    $collection = collection(20),
+    [(new OrProposition)
+        ->addExpression(new Condition("0", "3", $collection))
+        ->addExpression(new Condition("0", "2", $collection))
+        ->addExpression(new Condition("0", "1", $collection))
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("2", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("6", "6", $collection))
+        ->addExpression(new Condition("7", "3", $collection)),
+    (new OrProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression(new Condition("4", "3", $collection))
+        ->addExpression(new Condition("5", "3", $collection))
+        ->addExpression(new Condition("6", "3", $collection))
+        ->addExpression(new Condition("7", "3", $collection))
+        ->addExpression(new Condition("7", "7", $collection))
+        ->addExpression(new Condition("7", "83", $collection))
+        ->addExpression(new Condition("7", "Q", $collection))
+        ->addExpression(new Condition("7", "3", $collection))
+        ->addExpression(new Condition("7", "2", $collection))
+        ->addExpression(new Condition("4", "0", $collection)),
+    (new AndProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("3", "5", $collection))
+        ->addExpression(new Condition("3", "1", $collection))
+        ->addExpression(new Condition("3", "2", $collection))
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("5", "5", $collection))
+        ->addExpression(new Condition("5", "6", $collection)),
+    (new OrProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("3", "5", $collection))
+        ->addExpression(new Condition("3", "1", $collection))
+        ->addExpression(new Condition("3", "2", $collection))
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("5", "5", $collection))
+        ->addExpression(new Condition("5", "6", $collection)),
+    (new OrProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("3", "5", $collection))
+        ->addExpression(new Condition("3", "1", $collection))
+        ->addExpression(new Condition("3", "2", $collection))
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("5", "5", $collection))
+        ->addExpression(new Condition("5", "6", $collection)),
+    (new AndProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("3", "4", $collection)),
+    (new OrProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression((new OrProposition)
+            ->addExpression(new Condition("0", "4", $collection))
+            ->addExpression(new Condition("1", "5", $collection))
+            ->addExpression(new Condition("2", "6", $collection))
+            ->addExpression(new Condition("3", "3", $collection))
+        )
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression((new AndProposition())
+            ->addExpression((new AndProposition)
+                ->addExpression(new Condition("0", "3", $collection))
+                ->addExpression(new Condition("0", "2", $collection))
+            )
+            ->addExpression((new AndProposition)
+                ->addExpression(new Condition("1", "3", $collection))
+                ->addExpression(new Condition("1", "2", $collection))
+            )
+        )
+        ->addExpression(new Condition("5", "5", $collection))
+        ->addExpression((new AndProposition)
+            ->addExpression(new Condition("1", "4", $collection))
+            ->addExpression(new Condition("2", "5", $collection))
+            ->addExpression(new Condition("4", "6", $collection))
+            ->addExpression(new Condition("5", "3", $collection))
+        )
+        ->addExpression(new Condition("6", "6", $collection))
+        ->addExpression(new Condition("7", "7", $collection))
+        ->addExpression(new Condition("8", "8", $collection))
+        ->addExpression(new Condition("9", "9", $collection)),
+    (new OrProposition)
+        ->addExpression(new Condition("0", "0", $collection))
+        ->addExpression(new Condition("1", "1", $collection))
+        ->addExpression(new Condition("2", "2", $collection))
+        ->addExpression(new Condition("3", "3", $collection))
+        ->addExpression(new Condition("4", "4", $collection))
+        ->addExpression(new Condition("5", "5", $collection))
+        ->addExpression(new Condition("6", "6", $collection))
+        ->addExpression(new Condition("7", "7", $collection))
+        ->addExpression(new Condition("8", "8", $collection))
+        ->addExpression(new Condition("9", "9", $collection))
+        ->addExpression(new Condition("0", "1", $collection))
+        ->addExpression(new Condition("10", "0", $collection)),
+    (new OrProposition)
+        ->addExpression(new Condition("0", "1", $collection))
+        ->addExpression(new Condition("1", "2", $collection))
+        ->addExpression(new Condition("2", "3", $collection))
+        ->addExpression(new Condition("3", "4", $collection))
+        ->addExpression(new Condition("4", "5", $collection))
+        ->addExpression(new Condition("5", "6", $collection))
+        ->addExpression(new Condition("6", "7", $collection))
+        ->addExpression(new Condition("7", "7", $collection))
+        ->addExpression(new Condition("8", "8", $collection))
+        ->addExpression(new Condition("9", "9", $collection))
+        ->addExpression(new Condition("0", "1", $collection))
+        ->addExpression(new Condition("10", "0", $collection)),
+    ],
+
+    [1000, 10000],
+    "01234567890123456789",
+    "Nested propositions, without nots"
 );*/
 
 /*$groups[] = benchmark(
@@ -425,7 +607,7 @@ $bench->progression(2000, 8, 5);
 $groups[] = $bench->getResults();*/
 
 
-$bench = new \Nicmart\Benchmark\VariabeSizeEngine('Number of Propositions');
+/*$bench = new \Nicmart\Benchmark\VariabeSizeEngine('Number of Propositions');
 $bench
     ->registerFunctional('scan', 'ScanEngine', generateNumberOfPropositionProgression(ScanEngine::class), true)
     ->registerFunctional('smart', 'SmartEngine', generateNumberOfPropositionProgression(Engine::class), true)
@@ -433,7 +615,7 @@ $bench
 
 $bench->progression(1000, 8, 5, 2);
 
-$groups[] = $bench->getResults();
+$groups[] = $bench->getResults();*/
 
 
 $template = new \Nicmart\Benchmark\PHPTemplate;
