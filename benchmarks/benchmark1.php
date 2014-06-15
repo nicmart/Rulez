@@ -233,6 +233,11 @@ $groups[] = benchmark(
             ->addExpression(new Condition("16", "f", $collection))
             ->addExpression(new Condition("17", "f", $collection))
             ->addExpression(new Condition("18", "f", $collection))
+            ->addExpression(new Condition("19", "f", $collection))
+            ->addExpression(new Condition("20", "f", $collection))
+            ->addExpression(new Condition("21", "f", $collection))
+            ->addExpression(new Condition("22", "f", $collection))
+            ->addExpression(new Condition("23", "f", $collection))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",

@@ -3,9 +3,49 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "f8310a3bec2e04826095dd3f3deb30e3",
+    "hash": "c037387f26b00001faaad59ef387169d",
     "packages": [
-
+        {
+            "name": "nicmart/building",
+            "version": "0.2.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicmart/Building.git",
+                "reference": "f99d70935f63e681eff0b6bedd83ee7a112e552c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicmart/Building/zipball/f99d70935f63e681eff0b6bedd83ee7a112e552c",
+                "reference": "f99d70935f63e681eff0b6bedd83ee7a112e552c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NicMart\\Building\\": "src/",
+                    "NicMart\\Building\\Test\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolò Martini",
+                    "email": "nicmartnic@gmail.com",
+                    "homepage": "http://nicolo.martini.io"
+                }
+            ],
+            "description": "A PHP library that abstracts the definition of fluent builders.",
+            "time": "2014-06-09 21:24:02"
+        }
     ],
     "packages-dev": [
         {
@@ -14,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle3.git",
-                "reference": "92d9934f2fca1da15178c91239576ae26e505e60"
+                "reference": "49104c619b663038e636a819718adce3b27ba6f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/92d9934f2fca1da15178c91239576ae26e505e60",
-                "reference": "92d9934f2fca1da15178c91239576ae26e505e60",
+                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/49104c619b663038e636a819718adce3b27ba6f2",
+                "reference": "49104c619b663038e636a819718adce3b27ba6f2",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +138,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-05-07 17:04:22"
+            "time": "2014-06-04 19:49:37"
         },
         {
             "name": "jeremeamia/SuperClosure",
@@ -321,12 +361,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/satooshi/php-coveralls.git",
-                "reference": "b7271847c84d160f5b0aae83e45c225e8ffc96f4"
+                "reference": "d05254e48ac5031a16418f42b11ccb0fc6daacd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/b7271847c84d160f5b0aae83e45c225e8ffc96f4",
-                "reference": "b7271847c84d160f5b0aae83e45c225e8ffc96f4",
+                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/d05254e48ac5031a16418f42b11ccb0fc6daacd2",
+                "reference": "d05254e48ac5031a16418f42b11ccb0fc6daacd2",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +428,7 @@
                 "github",
                 "test"
             ],
-            "time": "2014-05-14 13:09:37"
+            "time": "2014-06-12 15:19:16"
         },
         {
             "name": "symfony/config",
@@ -397,12 +437,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f"
+                "reference": "32018f35de323afd1bffb601f9e760ff3fb6ba05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
-                "reference": "9c8caadb38ecc69ac35ab31af4d1996944b5a09f",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/32018f35de323afd1bffb601f9e760ff3fb6ba05",
+                "reference": "32018f35de323afd1bffb601f9e760ff3fb6ba05",
                 "shasum": ""
             },
             "require": {
@@ -412,7 +452,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -438,7 +478,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-22 08:11:23"
+            "time": "2014-05-23 14:36:49"
         },
         {
             "name": "symfony/console",
@@ -447,12 +487,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "50be4f30d0a93404e5d62b05fd7294492cf64c4f"
+                "reference": "f41913cde27de7073e78d9a41c1299c0315dfe64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/50be4f30d0a93404e5d62b05fd7294492cf64c4f",
-                "reference": "50be4f30d0a93404e5d62b05fd7294492cf64c4f",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/f41913cde27de7073e78d9a41c1299c0315dfe64",
+                "reference": "f41913cde27de7073e78d9a41c1299c0315dfe64",
                 "shasum": ""
             },
             "require": {
@@ -460,16 +500,18 @@
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1"
+                "symfony/event-dispatcher": "~2.1",
+                "symfony/process": "~2.1"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
-                "symfony/event-dispatcher": ""
+                "symfony/event-dispatcher": "",
+                "symfony/process": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -495,7 +537,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-15 08:56:35"
+            "time": "2014-06-11 06:54:52"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -504,12 +546,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8"
+                "reference": "7a4f4b42886f8c2e35acb1071f157a0b8eb1bd39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
-                "reference": "cb62ec8dd05893fc8e4f0e6e21e326e1fc731fe8",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/7a4f4b42886f8c2e35acb1071f157a0b8eb1bd39",
+                "reference": "7a4f4b42886f8c2e35acb1071f157a0b8eb1bd39",
                 "shasum": ""
             },
             "require": {
@@ -528,7 +570,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -554,7 +596,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-29 10:13:57"
+            "time": "2014-05-23 14:36:49"
         },
         {
             "name": "symfony/filesystem",
@@ -563,12 +605,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d"
+                "reference": "8ec53ca0a09cf07b58a62590b67166f4a39af81b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/98e831eac836a0a5911626ce82684155f21d0e4d",
-                "reference": "98e831eac836a0a5911626ce82684155f21d0e4d",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/8ec53ca0a09cf07b58a62590b67166f4a39af81b",
+                "reference": "8ec53ca0a09cf07b58a62590b67166f4a39af81b",
                 "shasum": ""
             },
             "require": {
@@ -577,7 +619,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -603,7 +645,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:36:21"
+            "time": "2014-05-23 14:36:49"
         },
         {
             "name": "symfony/stopwatch",
@@ -612,12 +654,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Stopwatch.git",
-                "reference": "724d73604ebe6c1c9bdf36533b556123bd9075a1"
+                "reference": "8f53219a7869b65e4cd1568b22faa36d08bfff15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/724d73604ebe6c1c9bdf36533b556123bd9075a1",
-                "reference": "724d73604ebe6c1c9bdf36533b556123bd9075a1",
+                "url": "https://api.github.com/repos/symfony/Stopwatch/zipball/8f53219a7869b65e4cd1568b22faa36d08bfff15",
+                "reference": "8f53219a7869b65e4cd1568b22faa36d08bfff15",
                 "shasum": ""
             },
             "require": {
@@ -626,7 +668,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -652,7 +694,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:40:13"
+            "time": "2014-06-06 10:36:27"
         },
         {
             "name": "symfony/yaml",
@@ -661,12 +703,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "2158ca824145bd01877f58c987aff828bccddefa"
+                "reference": "b01d366060f33e18fd98b0008c41a01b0d25c95c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/2158ca824145bd01877f58c987aff828bccddefa",
-                "reference": "2158ca824145bd01877f58c987aff828bccddefa",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b01d366060f33e18fd98b0008c41a01b0d25c95c",
+                "reference": "b01d366060f33e18fd98b0008c41a01b0d25c95c",
                 "shasum": ""
             },
             "require": {
@@ -675,7 +717,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -701,7 +743,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-16 14:25:18"
+            "time": "2014-06-04 06:43:44"
         }
     ],
     "aliases": [
