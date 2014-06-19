@@ -11,7 +11,6 @@
 namespace NicMart\Rulez\Engine;
 
 
-use NicMart\Rulez\Maps\MapsCollection;
 use NicMart\Rulez\Test\Expression\PropositionToCallback;
 
 class ScanEngine implements EngineInterface
@@ -19,29 +18,9 @@ class ScanEngine implements EngineInterface
     private $callbacksToProductions = array();
 
     /**
-     * @var MapsCollection
-     */
-    private $mapsCollection;
-
-    /**
      * @var PropositionToCallback
      */
     private $propositionToCallback;
-
-    function __construct(MapsCollection $mapsCollection)
-    {
-        $this->setMapsCollection($mapsCollection);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    function setMapsCollection(MapsCollection $maps)
-    {
-        $this->mapsCollection = $maps;
-
-        return $this;
-    }
 
     /**
      * {@inheritdoc}

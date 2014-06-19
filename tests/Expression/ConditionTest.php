@@ -18,18 +18,13 @@ class ConditionTest extends \PHPUnit_Framework_TestCase
 {
     function testPredicate()
     {
-        $collection = new MapsCollection;
-        $condition = new Condition("foo", "bar", $collection);
+        $condition = new Condition("foo", "bar");
 
         $callback = $condition->predicate();
 
-        $this->setExpectedException("\\OutOfBoundsException");
-        $callback("bar");
-
-        $collection["foo"] = function($x) { return $x; };
-
-        $this->assertTrue($callback("bar"));
-        $this->assertFalse($callback("baz"));
+        $this->assertTrue($callback(["foo" => "bar"]));
+        $this->assertFalse($callback(["foo" => "baz"]));
+        $this->assertFalse($callback(["fooo" => "baz"]));
     }
 }
  

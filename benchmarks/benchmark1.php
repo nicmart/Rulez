@@ -79,7 +79,7 @@ function prop(MapsCollection $collection, $numConditions, $isOr = true)
         $mapName = (string) rand(0, $numOfMaps - 1);
         $condValue = (string) rand(0, 9);
 
-        $prop->addExpression(new Condition($mapName, $condValue, $collection));
+        $prop->addExpression(new Condition($mapName, $condValue));
     }
 
     return $prop;
@@ -214,30 +214,30 @@ $groups[] = benchmark(
 $groups[] = benchmark(
     $collection = collection(30), [
         (new AndProposition)
-            ->addExpression(new Condition("0", "x", $collection))
-            ->addExpression(new Condition("1", "s", $collection))
-            ->addExpression(new Condition("2", "d", $collection))
-            ->addExpression(new Condition("3", "d", $collection))
-            ->addExpression(new Condition("4", "d", $collection))
-            ->addExpression(new Condition("5", "d", $collection))
-            ->addExpression(new Condition("6", "d", $collection))
-            ->addExpression(new Condition("7", "d", $collection))
-            ->addExpression(new Condition("8", "d", $collection))
-            ->addExpression(new Condition("9", "d", $collection))
-            ->addExpression(new Condition("10", "d", $collection))
-            ->addExpression(new Condition("11", "f", $collection))
-            ->addExpression(new Condition("12", "f", $collection))
-            ->addExpression(new Condition("13", "f", $collection))
-            ->addExpression(new Condition("14", "f", $collection))
-            ->addExpression(new Condition("15", "f", $collection))
-            ->addExpression(new Condition("16", "f", $collection))
-            ->addExpression(new Condition("17", "f", $collection))
-            ->addExpression(new Condition("18", "f", $collection))
-            ->addExpression(new Condition("19", "f", $collection))
-            ->addExpression(new Condition("20", "f", $collection))
-            ->addExpression(new Condition("21", "f", $collection))
-            ->addExpression(new Condition("22", "f", $collection))
-            ->addExpression(new Condition("23", "f", $collection))
+            ->addExpression(new Condition("0", "x"))
+            ->addExpression(new Condition("1", "s"))
+            ->addExpression(new Condition("2", "d"))
+            ->addExpression(new Condition("3", "d"))
+            ->addExpression(new Condition("4", "d"))
+            ->addExpression(new Condition("5", "d"))
+            ->addExpression(new Condition("6", "d"))
+            ->addExpression(new Condition("7", "d"))
+            ->addExpression(new Condition("8", "d"))
+            ->addExpression(new Condition("9", "d"))
+            ->addExpression(new Condition("10", "d"))
+            ->addExpression(new Condition("11", "f"))
+            ->addExpression(new Condition("12", "f"))
+            ->addExpression(new Condition("13", "f"))
+            ->addExpression(new Condition("14", "f"))
+            ->addExpression(new Condition("15", "f"))
+            ->addExpression(new Condition("16", "f"))
+            ->addExpression(new Condition("17", "f"))
+            ->addExpression(new Condition("18", "f"))
+            ->addExpression(new Condition("19", "f"))
+            ->addExpression(new Condition("20", "f"))
+            ->addExpression(new Condition("21", "f"))
+            ->addExpression(new Condition("22", "f"))
+            ->addExpression(new Condition("23", "f"))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",
@@ -247,9 +247,9 @@ $groups[] = benchmark(
 $groups[] = benchmark(
     $collection = collection(10), [
         (new NotProposition)
-            ->addExpression(new Condition("1", "a", $collection))
-            ->addExpression(new Condition("2", "a", $collection))
-            ->addExpression(new Condition("0", "a", $collection))
+            ->addExpression(new Condition("1", "a"))
+            ->addExpression(new Condition("2", "a"))
+            ->addExpression(new Condition("0", "a"))
     ],
     [10000],
     "asdasdasdasdasdasdasdasdasdasdasd",

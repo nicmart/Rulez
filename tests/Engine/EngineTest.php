@@ -11,70 +11,72 @@
 namespace NicMart\Rulez\Test\Engine;
 
 
+use NicMart\Arrayze\ArrayAdapter;
+use NicMart\Arrayze\MapsCollection;
 use NicMart\Rulez\Expression\Condition;
 use NicMart\Rulez\Expression\AndProposition;
 use NicMart\Rulez\Engine\Engine;
 use NicMart\Rulez\Engine\Rule;
 use NicMart\Rulez\Engine\ScanEngine;
 use NicMart\Rulez\Expression\NotProposition;
-use NicMart\Rulez\Maps\MapsCollection;
 use NicMart\Rulez\Expression\OrProposition;
 
 class EngineTest extends \PHPUnit_Framework_TestCase
 {
     function testRun()
     {
-        $collection = new MapsCollection;
-        $collection["="] = function($x) { return $x; };
-        $collection["+1"] = function($x) { return $x + 1; };
-        $collection["*2"] = function($x) { return 2 * $x; };
-        $collection["*5"] = function($x) { return $x * 5; };
-        $collection["%3"] = function($x) { return $x % 3; };
-        $collection["%5"] = function($x) { return $x % 5; };
-        $collection["%7"] = function($x) { return $x % 7; };
-        $collection["%15"] = function($x) { return $x % 15; };
-        $collection["%2"] = function($x) { return $x % 2; };
-        $collection[">50"] = function($x) { return $x > 50; };
+        $collection = (new MapsCollection)->registerMaps([
+            "=" => function($x) { return $x; },
+            "+1" => function($x) { return $x + 1; },
+            "*2" => function($x) { return 2 * $x; },
+            "*5" => function($x) { return $x * 5; },
+            "%3" => function($x) { return $x % 3; },
+            "%5" => function($x) { return $x % 5; },
+            "%7" => function($x) { return $x % 7; },
+            "%15" => function($x) { return $x % 15; },
+            "%2" => function($x) { return $x % 2; },
+            ">50" => function($x) { return $x > 50; },
+        ]);
 
         $engine = new Engine($collection);
         $scanEngine = new ScanEngine($collection);
 
         $prop1 = (new OrProposition)
-            ->addExpression(new Condition("%3", 0, $collection))
-            ->addExpression(new Condition("%5", 0, $collection))
+            ->addExpression(new Condition("%3", 0))
+            ->addExpression(new Condition("%5", 0))
         ;
 
         $prop2 = (new AndProposition)
-            ->addExpression(new Condition("%3", 0, $collection))
-            ->addExpression(new Condition("%5", 0, $collection))
+            ->addExpression(new Condition("%3", 0))
+            ->addExpression(new Condition("%5", 0))
         ;
         $prop3 = (new OrProposition)
-            ->addExpression(new Condition("=", 10, $collection))
-            ->addExpression(new Condition("=", 11, $collection))
-            ->addExpression(new Condition("=", 12, $collection))
-            ->addExpression(new Condition("=", 13, $collection))
-            ->addExpression(new Condition("=", 14, $collection))
+            ->addExpression(new Condition("=", 10))
+            ->addExpression(new Condition("=", 11))
+            ->addExpression(new Condition("=", 12))
+            ->addExpression(new Condition("=", 13))
+            ->addExpression(new Condition("=", 14))
         ;
 
         $prop4 = (new OrProposition)
-            ->addExpression(new Condition("%7", 1, $collection))
-            ->addExpression(new Condition("%7", 2, $collection))
-            ->addExpression(new Condition("%7", 3, $collection))
+            ->addExpression(new Condition("%7", 1))
+            ->addExpression(new Condition("%7", 2))
+            ->addExpression(new Condition("%7", 3))
         ;
 
         $prop5 = (new AndProposition)
-            ->addExpression(new Condition(">50", true, $collection))
+            ->addExpression(new Condition(">50", true))
         ;
 
         $prop6 = (new NotProposition)
-            ->addExpression(new Condition("%7", 1, $collection))
-            ->addExpression(new Condition("%7", 2, $collection))
-            ->addExpression(new Condition("%7", 3, $collection))
+            ->addExpression(new Condition("%7", 1))
+            ->addExpression(new Condition("%7", 2))
+            ->addExpression(new Condition("%7", 3))
         ;
 
         $propNotCombined = (new NotProposition)
             ->addExpression($prop6)
-            ->addExpression(new Condition("%5", 0, $collection))
+            ->addExpression(new Condition("%5", 0))
         ;
 
         $propCompositeOr = new OrProposition([
@@ -110,9 +112,11 @@ class EngineTest extends \PHPUnit_Framework_TestCase
 
         $n = rand(0, 100);
 
+        $x = new ArrayAdapter($n, $collection);
+
         var_dump($n);
-        var_dump($this->toAry($engine->run($n)));
-        var_dump($this->toAry($scanEngine->run($n)));
+        var_dump($this->toAry($engine->run($x)));
+        var_dump($this->toAry($scanEngine->run($x)));
     }
 
     private function toAry(\SplObjectStorage $storage)

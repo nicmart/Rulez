@@ -27,6 +27,13 @@ class RuleBuilder extends AbstractBuilder
      */
     private $production;
 
+    public function ifExpression(Expression $expression)
+    {
+        $this->expression = $expression;
+
+        return $this;
+    }
+
     public function ifAll()
     {
         return new AndPropositionBuilder($this->getExpressionCallback());

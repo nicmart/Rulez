@@ -10,8 +10,6 @@
 
 namespace NicMart\Rulez\Expression;
 
-use NicMart\Rulez\Maps\MapsCollection;
-
 /**
  * Class AndProposition
  * @package NicMart\Rulez\Condition

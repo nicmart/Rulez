@@ -11,8 +11,6 @@
 namespace NicMart\Rulez\Expression;
 
 
-use NicMart\Rulez\Maps\MapsCollection;
-
 /**
  * Class Condition
  *
@@ -20,22 +18,18 @@ use NicMart\Rulez\Maps\MapsCollection;
  */
 class Condition implements Expression
 {
-    private $mapName;
+    private $key;
 
     private $value;
 
-    private $mapsCollection;
-
     /**
-     * @param string    $mapName
-     * @param mixed     $value
-     * @param MapsCollection $mapsCollection
+     * @param string $key
+     * @param mixed $value
      */
-    function __construct($mapName, $value, MapsCollection $mapsCollection)
+    function __construct($key, $value)
     {
-        $this->mapName = $mapName;
+        $this->key = $key;
         $this->value = $value;
-        $this->mapsCollection = $mapsCollection;
     }
 
     /**
@@ -43,9 +37,9 @@ class Condition implements Expression
      *
      * @return string
      */
-    public function getMapName()
+    public function getKey()
     {
-        return $this->mapName;
+        return $this->key;
     }
 
     /**
@@ -65,9 +59,9 @@ class Condition implements Expression
     {
         return function($x)
         {
-            if (!isset($this->mapsCollection[$this->getMapName()]))
-                throw new \OutOfBoundsException("No map defined with that name");
-            return $this->mapsCollection[$this->getMapName()]($x) == $this->getValue();
+            $key = $this->getKey();
+
+            return isset($x[$key]) && $x[$key] == $this->getValue();
         };
     }
 }

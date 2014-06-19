@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=5.4",
-        "nicmart/building": "~0.2"
+        "nicmart/building": "~0.2",
+        "nicmart/arrayze": "~0.1"
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master",

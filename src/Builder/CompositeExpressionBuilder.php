@@ -38,9 +38,9 @@ abstract class CompositeExpressionBuilder extends AbstractBuilder
         return new NotPropositionBuilder($this->getSubexpressionCallback());
     }
 
-    public function eq($mapName, $value)
+    public function eq($key, $value)
     {
-        $this->building->addExpression(new Condition($mapName, $value, null));
+        $this->building->addExpression(new Condition($key, $value));
 
         return $this;
     }

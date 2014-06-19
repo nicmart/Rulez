@@ -9,17 +9,8 @@
  */
 namespace NicMart\Rulez\Engine;
 
-use NicMart\Rulez\Maps\MapsCollection;
-
 interface EngineInterface
 {
-    /**
-     * @param MapsCollection $maps
-     *
-     * @return $this
-     */
-    function setMapsCollection(MapsCollection $maps);
-
     /**
      * @param Rule $rule
      *

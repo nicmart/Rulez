@@ -20,24 +20,18 @@ use NicMart\Rulez\Expression\Condition;
 use NicMart\Rulez\Expression\Expression;
 use NicMart\Rulez\Expression\NotProposition;
 use NicMart\Rulez\Expression\OrProposition;
-use NicMart\Rulez\Maps\MapsCollection;
 
 class Engine implements EngineInterface
 {
     /**
-     * @var MapsCollection
+     * @var array
      */
-    private $maps;
+    private $keysValuesEvals = [];
 
     /**
      * @var array
      */
-    private $mapsValuesToEvals = [];
-
-    /**
-     * @var array
-     */
-    private $activeMaps = [];
+    private $keys = [];
 
     /**
      * @var PropositionEvaluation[]
@@ -49,25 +43,16 @@ class Engine implements EngineInterface
      */
     private $matches;
 
+    /**
+     * @var PropositionEvaluation[][]
+     */
     private $negativeEvaluationIndex = [];
 
     /**
-     * @param MapsCollection $maps
      */
-    function __construct(MapsCollection $maps)
+    function __construct()
     {
-        $this->setMapsCollection($maps);
         $this->matches = new \SplObjectStorage;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    function setMapsCollection(MapsCollection $maps)
-    {
-        $this->maps = $maps;
-
-        return $this;
     }
 
     /**
@@ -86,12 +71,11 @@ class Engine implements EngineInterface
      */
     function run($x)
     {
-        foreach($this->activeMaps as $mapName => $map)
-        {
-            $value = $map($x);
-            if (isset($this->mapsValuesToEvals[$mapName][$value])) {
+        foreach($this->keys as $key => $_) {
+            $value = $x[$key];
+            if (isset($this->keysValuesEvals[$key][$value])) {
                 /** @var PropositionEvaluation $propEval */
-                foreach($this->mapsValuesToEvals[$mapName][$value] as $propEval) {
+                foreach($this->keysValuesEvals[$key][$value] as $propEval) {
                     if (!$propEval->isResolved()) {
                         $propEval->input(true);
                     }
@@ -100,6 +84,7 @@ class Engine implements EngineInterface
         }
 
         foreach($this->negativeEvaluationIndex as $evaluations) {
+            /** @var $evaluation PropositionEvaluation */
             foreach ($evaluations as $evaluation) {
                 if(!$evaluation->isResolved())
                     $evaluation->resolve(true);
@@ -143,10 +128,10 @@ class Engine implements EngineInterface
 
         foreach ($expression->expressions() as $subExpression) {
             if ($subExpression instanceof Condition) {
-                $mapName = $subExpression->getMapName();
-                $mapValue = $subExpression->getValue();
-                $this->mapsValuesToEvals[$mapName][$mapValue][$this->propositionHash($expression)] = $eval;
-                $this->activeMaps[$mapName] = $this->maps[$mapName];
+                $key = $subExpression->getKey();
+                $value = $subExpression->getValue();
+                $this->keysValuesEvals[$key][$value][$this->propositionHash($expression)] = $eval;
+                $this->keys[$key] = true;
             } else {
                 $childLevel = 0;
                 $subEval = $this->createAndIndexEvaluation($subExpression, $childLevel);
@@ -176,7 +161,7 @@ class Engine implements EngineInterface
             return new NegativePropositionEvaluation(0);
         }
 
-        throw new Exception("Invalid expression type");
+        throw new \Exception("Invalid expression type");
     }
 
     private function callbackForRule(Rule $rule)
@@ -204,7 +189,7 @@ class Engine implements EngineInterface
         $type = get_class($expression);
 
         if ($expression instanceof Condition)
-            $value = "{$expression->getMapName()}:{$expression->getValue()}";
+            $value = "{$expression->getKey()}:{$expression->getValue()}";
         elseif ($expression instanceof CompositeExpression) {
             $subHashes = [];
             foreach ($expression->expressions() as $subExpression)

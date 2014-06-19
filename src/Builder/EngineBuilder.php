@@ -27,6 +27,8 @@ class EngineBuilder extends AbstractBuilder
         return new RuleBuilder(function(Rule $rule)
         {
             $this->getEngine()->addRule($rule);
+
+            return $this;
         });
     }
 
