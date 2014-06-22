@@ -14,6 +14,7 @@ namespace NicMart\Rulez\Builder;
 use NicMart\Building\AbstractBuilder;
 use NicMart\Rulez\Engine\EngineInterface;
 use NicMart\Rulez\Engine\Rule;
+use NicMart\Rulez\Expression\Expression;
 
 class EngineBuilder extends AbstractBuilder
 {
@@ -22,14 +23,44 @@ class EngineBuilder extends AbstractBuilder
         return parent::__construct(null, $engine);
     }
 
-    public function rule()
+    public function ifExpression(Expression $expression)
     {
-        return new RuleBuilder(function(Rule $rule)
+        $callback = $this->getExpressionCallback();
+
+        return $callback($expression);
+    }
+
+    public function ifAll()
+    {
+        return new AndPropositionBuilder($this->getExpressionCallback());
+    }
+
+    public function ifAny()
+    {
+        return new OrPropositionBuilder($this->getExpressionCallback());
+    }
+
+    public function ifNone()
+    {
+        return new NotPropositionBuilder($this->getExpressionCallback());
+    }
+
+    private function getExpressionCallback()
+    {
+        return function(Expression $expression)
+        {
+            return new RuleBuilder($this->getRuleCallback(), $expression);
+        };
+    }
+
+    private function getRuleCallback()
+    {
+        return function(Rule $rule)
         {
             $this->getEngine()->addRule($rule);
 
             return $this;
-        });
+        };
     }
 
     /**

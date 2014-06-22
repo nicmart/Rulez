@@ -22,58 +22,17 @@ class RuleBuilder extends AbstractBuilder
      */
     private $expression;
 
-    /**
-     * @var mixed
-     */
-    private $production;
-
-    public function ifExpression(Expression $expression)
+    public function __construct(callable $callback, Expression $expression)
     {
         $this->expression = $expression;
 
-        return $this;
-    }
-
-    public function ifAll()
-    {
-        return new AndPropositionBuilder($this->getExpressionCallback());
-    }
-
-    public function ifAny()
-    {
-        return new OrPropositionBuilder($this->getExpressionCallback());
-    }
-
-    public function ifNone()
-    {
-        return new NotPropositionBuilder($this->getExpressionCallback());
+        return parent::__construct($callback);
     }
 
     public function then($production)
     {
-        $this->production = $production;
+        $this->building = new Rule($this->expression, $production);
 
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function end()
-    {
-        $this->building = new Rule($this->expression, $this->production);
-
-        return parent::end();
-    }
-
-
-    private function getExpressionCallback()
-    {
-        return function(Expression $expression)
-        {
-            $this->expression = $expression;
-
-            return $this;
-        };
+        return $this->end();
     }
 } 

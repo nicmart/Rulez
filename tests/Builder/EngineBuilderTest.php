@@ -23,32 +23,28 @@ class EngineBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = new EngineBuilder(new Engine);
 
         $engine = $builder
-            ->rule()
-                ->ifAll()
-                    ->eq("foo", "fooval")
-                    ->eq("bar", "barval")
-                ->end()
-                ->then("A")
+            ->ifAll()
+                ->eq("foo", "fooval")
+                ->eq("bar", "barval")
             ->end()
-            ->rule()
-                ->ifAny()
+            ->then("A")
+
+            ->ifAny()
+                ->eq("a", "b")
+                ->all()
                     ->eq("a", "b")
-                    ->all()
-                        ->eq("a", "b")
-                        ->eq("c", "d")
-                        ->eq("d", "f")
-                    ->end()
                     ->eq("c", "d")
+                    ->eq("d", "f")
                 ->end()
-                ->then("B")
+                ->eq("c", "d")
             ->end()
-            ->rule()
-                ->ifNone()
-                    ->eq("a", "b")
-                    ->eq("c", "h")
-                ->end()
-                ->then("C")
+            ->then("B")
+
+            ->ifNone()
+                ->eq("a", "b")
+                ->eq("c", "h")
             ->end()
+            ->then("C")
         ->end();
 
         var_dump($engine);
