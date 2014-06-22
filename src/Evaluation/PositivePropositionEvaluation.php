@@ -14,13 +14,16 @@ class PositivePropositionEvaluation implements PropositionEvaluation
 {
     use PropositionEvaluationTrait;
 
+    private $evalsList;
+
     /**
      * @param $atLeast
      * @param callable $resolveCallback
      */
-    function __construct($atLeast, $resolveCallback = null)
+    function __construct($atLeast, $resolveCallback = null, \SplObjectStorage $evalsList = null)
     {
         $this->limit = $atLeast;
+        $this->evalsList = $evalsList;
 
         if ($resolveCallback)
             $this->onResolved($resolveCallback);
@@ -33,6 +36,7 @@ class PositivePropositionEvaluation implements PropositionEvaluation
     {
         if ($value) {
             $this->positiveInputCounter++;
+            $this->evalsList->attach($this);
 
             if ($this->positiveInputCounter >= $this->limit)
                 $this->resolve(true);

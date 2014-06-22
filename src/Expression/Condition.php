@@ -64,4 +64,11 @@ class Condition implements Expression
             return isset($x[$key]) && $x[$key] == $this->getValue();
         };
     }
+
+    function __toString()
+    {
+        return "x.{$this->getKey()} = {$this->getValue()}";
+    }
+
+
 }

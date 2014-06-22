@@ -117,6 +117,7 @@ class EngineTest extends \PHPUnit_Framework_TestCase
         var_dump($n);
         var_dump($this->toAry($engine->run($x)));
         var_dump($this->toAry($scanEngine->run($x)));
+        var_dump($this->toAry($scanEngine->run($x)));
     }
 
     private function toAry(\SplObjectStorage $storage)

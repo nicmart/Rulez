@@ -48,11 +48,14 @@ class Engine implements EngineInterface
      */
     private $negativeEvaluationIndex = [];
 
+    private $evalsToReset = [];
+
     /**
      */
     function __construct()
     {
         $this->matches = new \SplObjectStorage;
+        $this->evalsToReset = new \SplObjectStorage;
     }
 
     /**
@@ -130,7 +133,7 @@ class Engine implements EngineInterface
             if ($subExpression instanceof Condition) {
                 $key = $subExpression->getKey();
                 $value = $subExpression->getValue();
-                $this->keysValuesEvals[$key][$value][$this->propositionHash($expression)] = $eval;
+                $this->keysValuesEvals[$key][$value][$hash] = $eval;
                 $this->keys[$key] = true;
             } else {
                 $childLevel = 0;
@@ -154,11 +157,11 @@ class Engine implements EngineInterface
     private function evaluationFromProposition(CompositeExpression $expression)
     {
         if ($expression instanceof OrProposition) {
-            return new PositivePropositionEvaluation(1);
+            return new PositivePropositionEvaluation(1, null, $this->evalsToReset);
         } elseif ($expression instanceof AndProposition) {
-            return new PositivePropositionEvaluation(count($expression->expressions()));
+            return new PositivePropositionEvaluation(count($expression->expressions()), null, $this->evalsToReset);
         } elseif ($expression instanceof NotProposition) {
-            return new NegativePropositionEvaluation(0);
+            return new NegativePropositionEvaluation(0, null, $this->evalsToReset);
         }
 
         throw new \Exception("Invalid expression type");
@@ -177,9 +180,11 @@ class Engine implements EngineInterface
         $this->matches = new \SplObjectStorage;
 
         /** @var PropositionEvaluation $propEval */
-        foreach ($this->propositionsEvals as $propEval) {
+        foreach ($this->evalsToReset as $propEval) {
             $propEval->reset();
         }
+
+        $this->evalsToReset = new \SplObjectStorage;
 
         return $this;
     }

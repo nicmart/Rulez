@@ -42,4 +42,9 @@ class OrProposition implements CompositeExpression
             return false;
         };
     }
+
+    public function __toString()
+    {
+        return "(" . implode(" OR ", $this->expressions()) . ")";
+    }
 } 

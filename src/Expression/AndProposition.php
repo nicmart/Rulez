@@ -42,4 +42,11 @@ class AndProposition implements CompositeExpression
             return true;
         };
     }
+
+    function __toString()
+    {
+        return "(" . implode(" AND ", $this->expressions()) . ")";
+    }
+
+
 } 

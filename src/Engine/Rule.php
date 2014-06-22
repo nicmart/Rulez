@@ -58,4 +58,11 @@ class Rule
     {
         return $this->expression;
     }
+
+    function __toString()
+    {
+        return "{$this->production()} -> {$this->expression()}";
+    }
+
+
 }

@@ -10,17 +10,9 @@
 
 namespace NicMart\Rulez\Engine;
 
-
-use NicMart\Rulez\Test\Expression\PropositionToCallback;
-
 class ScanEngine implements EngineInterface
 {
     private $callbacksToProductions = array();
-
-    /**
-     * @var PropositionToCallback
-     */
-    private $propositionToCallback;
 
     /**
      * {@inheritdoc}

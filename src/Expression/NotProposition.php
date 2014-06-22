@@ -42,4 +42,9 @@ class NotProposition implements CompositeExpression
             return true;
         };
     }
-} 
+
+    public function __toString()
+    {
+        return "NOT (" . implode(" OR ", $this->expressions()) . ")";
+    }
+}

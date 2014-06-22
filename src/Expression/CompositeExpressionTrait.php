@@ -48,4 +48,4 @@ trait CompositeExpressionTrait
     {
         return $this->expressions;
     }
-} 
+}
