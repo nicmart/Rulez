@@ -42,13 +42,13 @@ function progressionFromRulesGenerator($class, callable $ruleAndInputGenerator)
 $numOfRules = function($n)
 {
     return generateSetOfRulesAndInput(
-        randomArgument(new OrProposition, new AndProposition),
-        5,  //Num of rules
-        3,   //Prop depth
+        randomArgument(new AndProposition, new OrProposition),
+        20,  //Num of rules
+        1,   //Prop depth
         4,  //numOfSubPropositionsPerProposition
         $n,   //$numOfLeafConditions
         30,  //Num of object Keys
-        30  // Num of values
+        5  // Num of values
     );
 };
 
@@ -58,7 +58,7 @@ $bench
     ->registerFunctional('smart', 'SmartEngine', progressionFromRulesGenerator(Engine::class, $numOfRules), true)
 ;
 
-$bench->progression(1000, 32, 2, 4);
+$bench->progression(100, 512, 1, 4);
 
 $groups[] = $bench->getResults();
 

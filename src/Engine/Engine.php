@@ -176,7 +176,6 @@ class Engine implements EngineInterface
 
     private function reset()
     {
-        #$this->matches->removeAllExcept(new \SplObjectStorage);
         $this->matches = new \SplObjectStorage;
 
         /** @var PropositionEvaluation $propEval */
